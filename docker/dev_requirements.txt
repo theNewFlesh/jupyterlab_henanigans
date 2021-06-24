@@ -1,0 +1,5 @@
+jupyter_packaging
+jupyterlab>=3.0.0
+setuptools
+twine
+wheel
