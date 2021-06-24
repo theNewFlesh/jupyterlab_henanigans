@@ -38,15 +38,15 @@
 
 .jp-Dialog-button:hover {
     color: var(--he-dark1) !important;
-    background: var(--he-cyan2) !important;
+    background: var(--he-dialog2) !important;
 }
 
 .jp-mod-accept {
-    background: var(--he-cyan1) !important;
+    background: var(--he-blue2) !important;
 }
 
 .jp-mod-reject {
-    background: var(--he-light1) !important;
+    background: var(--he-red2) !important;
 }
 
 .jp-mod-warn {

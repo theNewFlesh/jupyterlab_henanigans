@@ -344,11 +344,11 @@
 
     /* DROPDOWN-------------------------------------------------------------- */
     --jp-input-active-background: var(--he-grey1);
-    --jp-input-hover-background: var(--he-cyan2);
+    --jp-input-hover-background: var(--he-dialog2);
     --jp-input-background: var(--he-grey1);
     --jp-input-box-shadow: inset 0 0 2px var(--he-light2);
     --jp-input-border-color: var(--he-grey1);
-    --jp-input-active-border-color: var(--he-cyan2);
+    --jp-input-active-border-color: var(--he-dialog2);
 
     /* Vega extension styles */
     --jp-vega-background: var(--he-grey1);
