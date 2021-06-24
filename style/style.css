@@ -1,0 +1,461 @@
+@import './variables.css';
+
+/* MAIN BACKGROUND COLOUR */
+.jp-Notebook {
+  background: var(--he-dark2);
+  padding-top: 11px;
+}
+
+/* Preventing annoying line wrapping from overflows in tooltip (Shift+Tab) */
+.jp-Tooltip {
+  max-width: 660px !important;
+  overflow: auto;
+  border-radius: 4px;
+}
+.jp-Tooltip.jp-HoverBox > div.jp-Tooltip-content > pre {
+  white-space: pre !important;
+}
+
+/* CodeMirror Syntax Highlighting, unset bold */
+.jp-RenderedText pre .ansi-bold {
+  font-weight: normal !important;
+}
+
+/* ------------------------------------------------------------------- */
+/* StdError (Tracebacks)                                               */
+/* ------------------------------------------------------------------- */
+
+/* StdError background */
+.jp-OutputArea-output[data-mime-type='application/vnd.jupyter.stderr'] {
+  /* background: unset !important; */
+  background: var(--he-red3) !important;
+}
+
+/* Traceback Syntax Highlighting */
+
+/* Headings, eg. `Docstring:` */
+.jp-OutputArea-output[data-mime-type='application/vnd.jupyter.stderr']
+  .ansi-red-fg,
+.jp-OutputArea-output[data-mime-type='application/vnd.jupyter.stderr']
+  .ansi-red-intense-fg {
+  color: var(--he-red1) !important;
+  font-weight: bold !important;
+}
+/* Punctuation & operators */
+.jp-OutputArea-output[data-mime-type='application/vnd.jupyter.stderr']
+  .ansi-yellow-fg,
+.jp-OutputArea-output[data-mime-type='application/vnd.jupyter.stderr']
+  .ansi-yellow-intense-fg {
+  color: var(--he-cyan2) !important;
+}
+/* Functions */
+.jp-OutputArea-output[data-mime-type='application/vnd.jupyter.stderr']
+  .ansi-cyan-fg {
+  color: var(--he-cyan2) !important;
+}
+/* Numbers */
+.jp-OutputArea-output[data-mime-type='application/vnd.jupyter.stderr']
+  .ansi-cyan-intense-fg {
+  color: var(--he-orange1) !important;
+}
+/* Strings, brackets and some function arguments */
+.jp-OutputArea-output[data-mime-type='application/vnd.jupyter.stderr']
+  .ansi-blue-fg,
+.jp-OutputArea-output[data-mime-type='application/vnd.jupyter.stderr']
+  .ansi-blue-intense-fg {
+  color: var(--he-green2) !important;
+}
+/* Paths and keywords */
+.jp-OutputArea-output[data-mime-type='application/vnd.jupyter.stderr']
+  .ansi-green-fg,
+.jp-OutputArea-output[data-mime-type='application/vnd.jupyter.stderr']
+  .ansi-green-intense-fg {
+  color: var(--he-purple1) !important;
+}
+
+/* ------------------------------------------------------------------- */
+/* Other CodeMirror Syntax Highlighting                                */
+/* ------------------------------------------------------------------- */
+/* e.g. when you `?` something (to get help menu) */
+
+/* Headings, eg. `Docstring:` */
+.jp-RenderedText[data-mime-type='text/plain'] .ansi-red-fg,
+.jp-RenderedText[data-mime-type='text/plain'] .ansi-red-intense-fg {
+  color: var(--he-cyan2) !important;
+}
+/* Punctuation & operators */
+.jp-RenderedText[data-mime-type='text/plain'] .ansi-yellow-fg,
+.jp-RenderedText[data-mime-type='text/plain'] .ansi-yellow-intense-fg {
+  color: var(--he-cyan2) !important;
+}
+/* Numbers */
+.jp-RenderedText[data-mime-type='text/plain'] .ansi-cyan-fg,
+.jp-RenderedText[data-mime-type='text/plain'] .ansi-cyan-intense-fg {
+  color: var(--he-orange1) !important;
+}
+/* Strings */
+.jp-RenderedText[data-mime-type='text/plain'] .ansi-blue-fg,
+.jp-RenderedText[data-mime-type='text/plain'] .ansi-blue-intense-fg {
+  color: var(--he-green2) !important;
+}
+/* Keywords */
+.jp-RenderedText[data-mime-type='text/plain'] .ansi-green-fg,
+.jp-RenderedText[data-mime-type='text/plain'] .ansi-green-intense-fg {
+  color: var(--he-purple1) !important;
+}
+
+/* Toolbar and right-click menu hover */
+li.lm-Menu-item.p-Menu-item:not([data-type='separator']):hover {
+  background-color: var(--he-dialog1);
+}
+
+.lm-CommandPalette-item.lm-mod-disabled {
+  color: var(--he-light2);
+}
+
+.lm-CommandPalette-item.lm-mod-active {
+  background: var(--he-gray2);
+}
+
+.lm-CommandPalette-item.lm-mod-active:hover:not(.lm-mod-disabled) {
+  background: var(--he-gray2);
+}
+
+.lm-CommandPalette-item:hover:not(.lm-mod-active):not(.lm-mod-disabled) {
+  background: var(--he-gray2);
+  cursor: pointer;
+}
+
+/* Change the colour of linenumbers */
+.CodeMirror-linenumber {
+  padding: 0 3px 0 5px;
+  min-width: 20px;
+  text-align: center;
+  color: var(--he-light1);
+  background-color: var(--he-grey1);
+  white-space: nowrap;
+}
+
+/* This is the region where the linenumbers are */
+.CodeMirror-gutters {
+  border-right: none;
+  background-color: var(--he-grey1);
+  white-space: nowrap;
+}
+
+.CodeMirror-gutter {
+  background-color: unset !important;
+}
+
+/* Do some nice things with brackets */
+div.CodeMirror span.CodeMirror-matchingbracket {
+  color: var(--he-cyan2);
+  border-bottom: 1px solid var(--he-cyan2);
+  line-height: 1;
+}
+div.CodeMirror span.CodeMirror-nonmatchingbracket {
+  color: var(--he-light1);
+  border-bottom: 1px solid var(--he-red1);
+  line-height: 0.55;
+}
+.CodeMirror-matchingtag {
+  background: var(--he-purple2);
+}
+.CodeMirror-activeline-background {
+  background: #e8f2ff;
+}
+
+.CodeMirror-selected {
+  background: var(--he-blue3);
+}
+.CodeMirror-focused .CodeMirror-selected {
+  background: var(--he-blue3);
+}
+
+/* selected text highlight */
+/* Item selected in menu for files and what not */
+.jp-DirListing-item.jp-mod-selected {
+  /* color: white; */
+  color: var(--he-light2);
+  background: var(--he-dialog1);
+}
+
+/* Makes the running icon a tiny bit bigger */
+.jp-DirListing-item.jp-mod-running .jp-DirListing-itemIcon:before {
+  color: var(--he-green2);
+  content: '\25CF';
+  font-size: 12px;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  top: -2px;
+  left: -8px;
+}
+
+/*.jp-Toolbar-item.jp-Toolbar-kernelStatus {
+    display: inline-block;
+    width: 32px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 16px;
+    color: black;
+    fill: green;
+}*/
+
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--he-dark2);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--he-dialog1);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--he-dialog1);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb:active {
+  background: var(--he-cyan2);
+}
+
+/* Center any plots e.g. Matplotlib plots */
+/* .p-Widget.jp-RenderedImage.jp-mod-trusted.jp-OutputArea-output {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+} */
+
+/* Highlighted line in tab-completion menu */
+.jp-Completer-item.jp-mod-active {
+  color: var(--he-light2);
+  background: var(--he-gray2);
+}
+
+/* Custom line rule */
+.jp-RenderedHTMLCommon hr {
+  display: block;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  margin-left: 0em;
+  margin-right: 0em;
+  border-style: inset;
+  border-width: 1px;
+  border-top: 1px solid var(--he-light1);
+  border-bottom: 1px solid var(--he-light1);
+}
+
+/* Markdown inline code */
+.jp-RenderedHTMLCommon code,
+.jp-RenderedHTMLCommon pre {
+  padding: 1px 3px;
+  /* font-size: var() 1em !important; */
+}
+
+.jp-MarkdownOutput {
+  flex: 1 1 auto;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: var(--jp-code-padding);
+  padding-right: var(--jp-code-padding);
+  font-family: 'Open Sans', sans-serif;
+}
+
+.cm-s-zenburn {
+  background-color: var(--he-bg);
+  color: var(--he-light1);
+}
+
+.cm-s-zenburn .CodeMirror-gutters {
+  /* background: var(--he-bg) !important; */
+}
+
+.jp-Notebook .jp-Cell .jp-Collapser {
+  background: var(--he-grey1);
+  border-bottom-right-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 6px;
+  border-top-left-radius: 6px;
+}
+
+.jp-Notebook .jp-Cell.jp-mod-active .jp-Collapser {
+  background: var(--he-cyan2);
+}
+
+.jp-Notebook .jp-InputPrompt {
+  padding-top: 10px !important;
+}
+
+.jp-Notebook .jp-MarkdownCell .jp-InputPrompt {
+  background: var(--jp-inpromt-colour) !important;
+  color: var(--he-light1);
+  /* font-family: var(--jp-cell-prompt-font-family); */
+  opacity: 1;
+  cursor: move;
+  font-weight: medium;
+}
+
+/* InPrompt when cell is selected */
+.jp-Notebook .jp-Cell .jp-InputPrompt {
+  background: var(--jp-inpromt-colour);
+  color: var(--he-light1);
+  /* font-family: var(--jp-cell-prompt-font-family); */
+  opacity: 1;
+  cursor: move;
+  font-weight: medium;
+}
+
+.jp-Notebook .jp-Cell:not(.jp-mod-active) .jp-InputPrompt {
+  opacity: 1;
+  background: var(--jp-inpromt-colour);
+  font-weight: normal;
+  color: var(--he-light1);
+}
+
+/* Rounding the tab corners */
+.lm-TabBar-content .lm-TabBar-tab,
+.p-TabBar-content .p-TabBar-tab {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+/* Disabling bold keywords */
+.cm-keyword {
+  font-weight: normal !important;
+}
+
+/* Toggle code comment italics */
+.cm-comment {
+  /* font-style: normal !important; */
+}
+
+/* Remove automatic 4px padding at the top and bottom of cells */
+/* .CodeMirror-lines {
+    padding: 0px;
+} */
+
+/* Border radius of code cells */
+.jp-InputArea-editor {
+  /* border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px; */
+  border-radius: 4px;
+  padding: var(--jp-code-padding);
+}
+
+/* Hover effects on Launcher cards */
+.jp-LauncherCard {
+  transition: transform 0.2s ease-in-out;
+}
+
+.jp-LauncherCard:hover {
+  transform: scale(1.1);
+}
+
+.MathJax_Preview {
+  color: var(--he-light1) !important;
+}
+
+HTML,
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+input,
+button,
+textarea,
+p,
+blockquote,
+th,
+td,
+span,
+a {
+  text-rendering: auto !important;
+  -webkit-font-smoothing: subpixel-antialiased !important;
+}
+
+/* Set the default typography for monospace elements */
+tt,
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--jp-code-font-family);
+  font-size: var(--jp-code-font-size) !important;
+  line-height: var(--jp-code-line-height);
+}
+
+.jp-Dialog-content,
+.jp-Dialog-body {
+  background: var(--he-dialog1) !important;
+  color: var(--he-light2) !important;
+}
+
+button.jp-mod-styled.jp-mod-accept {
+  background: var(--he-dialog1);
+}
+
+.jp-Dialog-buttonLabel,
+.jp-mod-warn {
+  color: var(--he-bg) !important;
+  font-weight: 600;
+}
+
+.jp-mod-warn {
+  background: var(--he-red2) !important;
+}
+
+.lm-DockPanel-tabBar .lm-TabBar-tab.jp-mod-current:before {
+  background: var(--he-cyan2) !important;
+}
+
+#jp-top-panel,
+#jp-menu-panel,
+.lm-MenuBar {
+  background: var(--he-dark1);
+}
+
+button.jp-Button.bp3-button.bp3-minimal:hover {
+  background: var(--he-dialog1);
+}
+
+.jp-HTMLSelect.jp-DefaultStyle select:hover,
+.jp-Toolbar-item > :hover {
+  background: var(--he-dialog1) !important;
+}
+
+.jp-DirListing-headerItem:hover {
+  background: var(--he-dialog1) !important;
+}
+
+.jp-ToolbarButtonComponent {
+  background: unset !important;
+}
+
+.jp-RunningSessions-item:hover {
+  background: var(--he-dialog1) !important;
+}
