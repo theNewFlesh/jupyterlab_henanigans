@@ -123,3 +123,10 @@
 .jp-DirListing-item.jp-mod-running .jp-DirListing-itemIcon:before {
     color: var(--he-green2) !important;
 }
+
+/* DROPDOWN------------------------------------------------------------------ */
+button.jp-ToolbarButtonComponent .jp-ToolbarButtonComponent-label:hover,
+.jp-Notebook-toolbarCellTypeDropdown > select:hover {
+    color: var(--he-light2) !important;
+    background: var(--he-grey1) !important;
+}
