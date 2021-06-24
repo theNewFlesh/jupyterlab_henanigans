@@ -46,11 +46,11 @@
 }
 
 .jp-mod-reject {
-    background: var(--he-red2) !important;
+    background: var(--he-light1) !important;
 }
 
 .jp-mod-warn {
-    background: var(--he-red1) !important;
+    background: var(--he-red2) !important;
 }
 
 /* MENU-ITEM-SELECTION------------------------------------------------------- */
@@ -64,10 +64,12 @@
     background: unset !important;
 }
 
+.jp-RunningSessions-sectionHeader > button:hover,
+.jp-RunningSessions-item:hover,
 .jp-ToolbarButtonComponent:hover,
 .jp-DirListing-item:hover {
     color: var(--he-light2) !important;
-    background: var(--he-dialog1) !important;
+    background: var(--he-grey1) !important;
 }
 
 .jp-DirListing-item {
