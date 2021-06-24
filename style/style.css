@@ -7,6 +7,15 @@
     background: var(--he-dark1);
 }
 
+/* LEFT-MENU----------------------------------------------------------------- */
+.lm-Menu {
+    border-width: 0px;
+}
+
+.lm-Menu-item[data-type='separator'] > div::after {
+    border-color: var(--he-grey1);
+}
+
 /* DIALOG-BOX---------------------------------------------------------------- */
 .jp-Dialog-content,
 .jp-Dialog-body {
