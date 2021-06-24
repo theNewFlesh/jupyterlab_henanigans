@@ -20,8 +20,10 @@
   --henanigans-green3: #90AD7A;
   --henanigans-cyan1: #7EC4CF;
   --henanigans-cyan2: #B6ECF3;
+  --henanigans-cyan3: #364949;
   --henanigans-blue1: #5F95DE;
   --henanigans-blue2: #93B6E6;
+  --henanigans-blue3: #5F95DE66;
   --henanigans-purple1: #C98FDE;
   --henanigans-purple2: #AC92DE;
 
@@ -503,10 +505,10 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 }
 
 .CodeMirror-selected {
-  background: var(--henanigans-dialog1);
+  background: var(--henanigans-blue3);
 }
 .CodeMirror-focused .CodeMirror-selected {
-  background: var(--henanigans-dialog1);
+  background: var(--henanigans-blue3);
 }
 
 /* selected text highlight */
@@ -753,7 +755,7 @@ pre {
 }
 
 button.jp-mod-styled.jp-mod-accept {
-    background: var(--henanigans-cyan2);
+    background: var(--henanigans-dialog1);
 }
 
 .jp-Dialog-buttonLabel,
@@ -762,12 +764,37 @@ button.jp-mod-styled.jp-mod-accept {
     font-weight: 600;
 }
 
+.jp-mod-warn {
+    background: var(--henanigans-red2) !important;
+}
+
 .lm-DockPanel-tabBar .lm-TabBar-tab.jp-mod-current:before {
-    background: var(--henanigans-cyan2);
+    background: var(--henanigans-cyan2) !important;
 }
 
 #jp-top-panel,
 #jp-menu-panel,
 .lm-MenuBar {
     background: var(--henanigans-dark1);
+}
+
+button.jp-Button.bp3-button.bp3-minimal:hover {
+    background: var(--henanigans-dialog1);
+}
+
+.jp-HTMLSelect.jp-DefaultStyle select:hover,
+.jp-Toolbar-item:hover{
+    background: var(--henanigans-dialog1) !important;
+}
+
+.jp-DirListing-headerItem:hover {
+    background: var(--henanigans-dialog1) !important;
+}
+
+.jp-ToolbarButtonComponent {
+    background: unset !important;
+}
+
+.jp-RunningSessions-item:hover {
+    background: var(--henanigans-dialog1) !important;
 }
