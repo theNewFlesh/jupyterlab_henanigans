@@ -16,8 +16,8 @@ RUN echo "\n${CYAN}SETUP UBUNTU USER${CLEAR}"; \
         --disabled-password \
         --gecos '' \
         --uid $UID_ \
-        --gid $GID_ ubuntu && \
-    usermod -aG root ubuntu
+        --gid $GID_ ubuntu
+
 WORKDIR /home/ubuntu
 
 # update ubuntu and install basic dependencies
@@ -76,13 +76,19 @@ ENV LC_ALL "C"
 
 FROM base AS dev
 
-RUN echo "\n${CYAN}FIX PERMISSIONS${CLEAR}"; \
-    chmod 771 /usr/share
+USER root
+
+# setup sudo
+RUN echo "\n${CYAN}SETUP SUDO${CLEAR}"; \
+    apt update && \
+    apt install -y sudo && \
+    usermod -aG sudo ubuntu && \
+    echo '%ubuntu    ALL = (ALL) NOPASSWD: ALL' >> /etc/sudoers
 
 USER ubuntu
 WORKDIR /home/ubuntu
 ENV REPO='jupyterlab_henanigans'
-ENV PYTHONPATH "${PYTHONPATH}:/home/ubuntu/$REPO/python"
+ENV PYTHONPATH "/home/ubuntu/.local/lib/python3.7/site-packages:/home/ubuntu/$REPO/python:${PYTHONPATH}"
 ENV REPO_ENV=True
 
 # install python dependencies

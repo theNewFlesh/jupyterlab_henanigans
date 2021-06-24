@@ -6,5 +6,9 @@
 
     // Selected Theme
     // Application-level visual styling theme
-    "theme": "jupyterlab_henanigans"
+    "theme": "JupyterLab Henanigans",
+
+    // Scrollbar Theming
+    // Enable/disable styling of the application scrollbars
+    "theme-scrollbars": true
 }

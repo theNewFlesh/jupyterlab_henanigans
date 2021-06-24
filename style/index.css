@@ -752,6 +752,10 @@ pre {
     color: var(--henanigans-light2) !important;
 }
 
+button.jp-mod-styled.jp-mod-accept {
+    background: var(--henanigans-cyan2);
+}
+
 .jp-Dialog-buttonLabel,
 .jp-mod-warn {
     color: var(--henanigans-bg) !important;
