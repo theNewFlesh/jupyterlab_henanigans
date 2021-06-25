@@ -99,7 +99,7 @@
     /* TEXT-SELECTION-------------------------------------------------------- */
     --jp-editor-selected-background: var(--he-grey2);
     --jp-editor-selected-focused-background: var(--he-blue3);
-    --jp-editor-cursor-color: var(--he-light1);
+    --jp-editor-cursor-color: var(--he-blue2);
 
     /* NOTEBOOK-------------------------------------------------------------- */
     --jp-notebook-padding: 0px 10px 0px 0px;
@@ -138,9 +138,6 @@
     --jp-cell-prompt-not-active-font-color: var(--he-light1);
     --jp-cell-inprompt-font-color: var(--he-light1);
     --jp-cell-outprompt-font-color: var(--he-light1);
-
-    --jp-editor-selected-background: var(--he-bg1);
-    --jp-editor-selected-focused-background: var(--he-bg1);
 
     /* BORDERS--------------------------------------------------------------- */
     --jp-border-width: 1px;
