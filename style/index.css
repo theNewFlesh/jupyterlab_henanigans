@@ -60,6 +60,10 @@
 }
 
 /* TOOLBAR-ITEMS------------------------------------------------------------- */
+.jp-Toolbar {
+    border-width: 0px !important;
+}
+
 .jp-ToolbarButtonComponent {
     background: unset !important;
 }
@@ -69,7 +73,7 @@
 .jp-ToolbarButtonComponent:hover,
 .jp-DirListing-item:hover {
     color: var(--he-light2) !important;
-    background: var(--he-grey1) !important;
+    background: var(--he-dialog1) !important;
 }
 
 .jp-DirListing-item {
@@ -88,7 +92,6 @@
 }
 
 .lm-CommandPalette-content {
-    /* background: var(--he-dark2) !important; */
     background: var(--he-dialog1) !important;
 }
 
@@ -130,3 +133,26 @@ button.jp-ToolbarButtonComponent .jp-ToolbarButtonComponent-label:hover,
     color: var(--he-light2) !important;
     background: var(--he-grey1) !important;
 }
+
+/* PLUGIN-MENU--------------------------------------------------------------- */
+#setting-editor .jp-PluginList ul {
+    background: var(--he-bg1) !important;
+}
+
+#setting-editor .jp-PluginList .jp-mod-selected {
+    color: var(--he-light2) !important;
+    background: var(--he-grey1) !important;
+    border-width: 0px !important;
+}
+
+#setting-editor .jp-PluginList li:hover {
+    color: var(--he-light2) !important;
+    background: var(--he-dialog1) !important;
+}
+
+/* CELL-EDITOR--------------------------------------------------------------- */
+.CodeMirror-gutters,
+.CodeMirror-linenumber.CodeMirror-gutter-elt {
+    background: var(--he-dark2) !important;
+}
+
