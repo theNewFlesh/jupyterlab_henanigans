@@ -16,6 +16,17 @@
     border-color: var(--he-grey1);
 }
 
+/* BUTTONS------------------------------------------------------------------- */
+.jp-extensionmanager-disclaimer-disable {
+    color: var(--he-light1) !important;
+    background: var(--he-dialog1) !important;
+}
+
+.jp-extensionmanager-disclaimer-disable:hover {
+    color: var(--he-light2) !important;
+    background: var(--he-dialog2) !important;
+}
+
 /* DIALOG-BOX---------------------------------------------------------------- */
 .jp-Dialog-content,
 .jp-Dialog-body {
@@ -57,6 +68,19 @@
 .lm-mod-active {
     color: var(--he-light2) !important;
     background: var(--he-bg2) !important;
+}
+
+/* ICONS */
+.jp-icon-brand1 {
+    fill: var(--he-blue2) !important;
+}
+
+.jp-icon-selectable-inverse {
+    fill: var(--he-dark2) !important;
+}
+
+.jp-LauncherCard:hover {
+    background: var(--he-dialog1) !important;
 }
 
 /* TOOLBAR-ITEMS------------------------------------------------------------- */
