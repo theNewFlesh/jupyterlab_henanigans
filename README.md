@@ -4,7 +4,7 @@ A dark, easy-on-the-eyes theme for JupyterLab.
 
 ![Github Actions Status](https://github.com/theNewFlesh/jupyterlab_henanigans/workflows/Build/badge.svg)
 
-<img src='screenshot.png' width='800px'>
+<img src='resources/screenshot.png' width='800px'>
 
 ---
 
