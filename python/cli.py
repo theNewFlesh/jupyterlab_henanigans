@@ -51,15 +51,10 @@ def get_info():
     build        - Build image of {repo}
     build-prod   - Build production image of {repo}
     container    - Display the Docker container id of {repo}
-    coverage     - Generate coverage report for {repo}
     destroy      - Shutdown {repo} container and destroy its image
     destroy-prod - Shutdown {repo} production container and destroy its image
-    docs         - Generate documentation for {repo}
-    fast-test    - Run testing on {repo} skipping tests marked as slow
-    full-docs    - Generates documentation, coverage report and metrics
     image        - Display the Docker image id of {repo}
-    lab          - Start a Jupyter lab server
-    lint         - Run linting and type checking on {repo}
+    lab          - Start a Jupyter lab server and build labextension
     package      - Build {repo} pip package
     prod         - Start {repo} production container
     publish      - Publish {repo} repository to python package index
@@ -72,8 +67,6 @@ def get_info():
     state        - State of {repo} container
     stop         - Stop {repo} container
     test         - Run testing on {repo}
-    tox          - Run tox tests on {repo}
-    version-up   - Updates version and runs full-docs and requirements
     zsh          - Run ZSH session inside {repo} container
 '''.format(repo=REPO))
 
@@ -961,15 +954,15 @@ def main():
         'build': build_dev_command(),
         'build-prod': build_prod_command(),
         'container': container_id_command(),
-        'coverage': coverage_command(),
+        # 'coverage': coverage_command(),
         'destroy': destroy_dev_command(),
         'destroy-prod': destroy_prod_command(),
-        'docs': docs_command(),
-        'fast-test': fast_test_command(),
-        'full-docs': full_docs_command(),
+        # 'docs': docs_command(),
+        # 'fast-test': fast_test_command(),
+        # 'full-docs': full_docs_command(),
         'image': image_id_command(),
         'lab': lab_command(),
-        'lint': lint_command(),
+        # 'lint': lint_command(),
         'package': package_command(),
         'prod': prod_command(args),
         'publish': publish_command(),
@@ -982,8 +975,8 @@ def main():
         'state': state_command(),
         'stop': stop_command(),
         'test': test_command(),
-        'tox': tox_command(),
-        'version-up': version_up_command(args),
+        # 'tox': tox_command(),
+        # 'version-up': version_up_command(args),
         'zsh': zsh_command(),
     }
     cmd = lut.get(mode, get_illegal_mode_command())
