@@ -1,6 +1,11 @@
-include LICENSE
+include dev_requirements.txt
+include prod_requirements.txt
 include README.md
 include RELEASE.md
+include LICENSE
+include version.txt
+graft */resources
+
 include pyproject.toml
 recursive-include jupyter-config *.json
 
