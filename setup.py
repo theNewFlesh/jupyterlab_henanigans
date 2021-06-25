@@ -1,10 +1,20 @@
-"""
-jupyterlab_henanigans setup
-"""
 import json
 from pathlib import Path
 
 import setuptools
+
+with open('version.txt') as f:
+    VERSION = f.read().strip('\n')
+
+with open('prod_requirements.txt') as f:
+    PROD_REQUIREMENTS = f.read().split('\n')
+
+with open('dev_requirements.txt') as f:
+    DEV_REQUIREMENTS = f.read().split('\n')
+
+with open('README.md') as f:
+    README = f.read()
+# ------------------------------------------------------------------------------
 
 HERE = Path(__file__).parent.resolve()
 
@@ -26,32 +36,30 @@ data_files_spec = [
     ("share/jupyter/labextensions/%s" % labext_name, str(HERE), "install.json"),
 ]
 
-long_description = (HERE / "README.md").read_text()
-
 # Get the package info from package.json
 pkg_json = json.loads((HERE / "package.json").read_bytes())
 
 setup_args = dict(
     name=name,
-    version=pkg_json["version"],
+    version=VERSION,
     url=pkg_json["homepage"],
     author=pkg_json["author"]["name"],
     author_email=pkg_json["author"]["email"],
     description=pkg_json["description"],
+    download_url='https://github.com/theNewFlesh/jupyterlab_henanigans/archive/' + VERSION + '.tar.gz',
     license=pkg_json["license"],
-    long_description=long_description,
+    long_description=README,
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(),
-    install_requires=[
-        "jupyter_server>=1.6,<2"
-    ],
+    install_requires=PROD_REQUIREMENTS,
+    extras_require={"dev": DEV_REQUIREMENTS},
     zip_safe=False,
     include_package_data=True,
     python_requires=">=3.6",
     platforms="Linux, Mac OS X, Windows",
-    keywords=["Jupyter", "JupyterLab", "JupyterLab3"],
+    keywords=['jupyter', 'jupyterlab', 'theme', 'henanigans'],
     classifiers=[
-        "License :: OSI Approved :: BSD License",
+        "License :: OSI Approved :: MIT License",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
@@ -71,7 +79,9 @@ try:
     post_develop = npm_builder(
         build_cmd="install:extension", source_dir="src", build_dir=lab_path
     )
-    setup_args['cmdclass'] = wrap_installers(post_develop=post_develop, ensured_targets=ensured_targets)
+    setup_args['cmdclass'] = wrap_installers(
+        post_develop=post_develop, ensured_targets=ensured_targets
+    )
     setup_args['data_files'] = get_data_files(data_files_spec)
 except ImportError as e:
     pass
