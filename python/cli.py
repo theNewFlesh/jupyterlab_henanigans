@@ -609,8 +609,10 @@ def lab_command():
         start(),
         line(
             docker_exec() + '''-e REPO_ENV=True {repo}
-                jupyter lab --allow-root --ip=0.0.0.0 --no-browser'''
-        ),
+                sudo /home/ubuntu/.local/bin/jupyter labextension develop --overwrite &&
+                jlpm watch &
+                jupyter lab --allow-root --ip=0.0.0.0 --no-browser
+        '''),
         exit_repo(),
     ]
     return resolve(cmds)

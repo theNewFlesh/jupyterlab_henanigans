@@ -108,7 +108,11 @@
             },
             {
                 "label": "lab",
-                "command": "jupyter lab --allow-root --ip=0.0.0.0 --no-browser",
+                "command": [
+                    "sudo /home/ubuntu/.local/bin/jupyter labextension develop --overwrite &&",
+                    "jlpm watch &",
+                    "jupyter lab --allow-root --ip=0.0.0.0 --no-browser"
+                ],
                 "type": "shell"
             },
             {
