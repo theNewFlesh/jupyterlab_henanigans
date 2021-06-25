@@ -197,9 +197,9 @@ def version_variable():
     # type: () -> str
     '''
     Returns:
-        str: Command to set version variable from pip/version.txt.
+        str: Command to set version variable from version.txt.
     '''
-    return 'export VERSION=`cat pip/version.txt`'
+    return 'export VERSION=`cat version.txt`'
 
 
 def make_docs_dir():
