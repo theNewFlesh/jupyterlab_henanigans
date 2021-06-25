@@ -96,4 +96,5 @@ COPY ./dev_requirements.txt dev_requirements.txt
 COPY ./prod_requirements.txt prod_requirements.txt
 RUN echo "\n${CYAN}INSTALL PYTHON DEPENDECIES${CLEAR}"; \
     pip3.7 install -r dev_requirements.txt && \
-    pip3.7 install -r prod_requirements.txt
+    pip3.7 install -r prod_requirements.txt && \
+    sudo /home/ubuntu/.local/bin/jupyter server extension enable --py jupyterlab_git

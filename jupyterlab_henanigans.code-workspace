@@ -109,7 +109,11 @@
             {
                 "label": "lab",
                 "command": [
+                    "cp docker/prod_requirements.txt . && ",
+                    "cp docker/dev_requirements.txt . && ",
                     "sudo /home/ubuntu/.local/bin/jupyter labextension develop --overwrite &&",
+                    "rm prod_requirements.txt && ",
+                    "rm dev_requirements.txt && ",
                     "jlpm watch &",
                     "jupyter lab --allow-root --ip=0.0.0.0 --no-browser"
                 ],
