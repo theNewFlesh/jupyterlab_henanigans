@@ -31,7 +31,11 @@
 .jp-Dialog-content,
 .jp-Dialog-body {
     background: var(--he-dialog1) !important;
-    color: var(--he-cyan1) !important;
+    color: var(--he-light1) !important;
+}
+
+.jp-Dialog-header {
+    color: var(--he-light2) !important;
 }
 
 /* DIALOG-BUTTONS------------------------------------------------------------ */
