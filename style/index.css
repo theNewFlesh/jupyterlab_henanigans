@@ -150,6 +150,45 @@
     background: var(--he-dark1) !important;
 }
 
+/* GIT-PANEL---------------------------------------------------------------- */
+/* #jp-git-sessions .MuiBadge-root button:hover {
+    background: var(--he-dialog1) !important;
+} */
+
+#jp-git-sessions div button:hover {
+    background: var(--he-dialog1) !important;
+}
+
+#jp-git-sessions > div > div > div:nth-child(1) > div > div:hover,
+#jp-git-sessions > div > div > div:nth-child(1) > div > div div:hover {
+    background: var(--he-dialog1) !important;
+}
+
+#jp-git-sessions > div > form > input:first-child {
+    color: var(--he-light1) !important;
+    background: var(--he-dialog1) !important;
+}
+
+#jp-git-sessions > div > form > input:first-child:hover {
+    color: var(--he-light2) !important;
+    background: var(--he-dialog2) !important;
+}
+
+#jp-git-sessions > div > div > div:nth-child(3) > div > div > input {
+    color: var(--he-dark1) !important;
+    background: var(--he-cyan1) !important;
+}
+
+#jp-git-sessions > div > div > div:nth-child(3) > div > div > input:hover {
+    color: var(--he-dark2) !important;
+    background: var(--he-cyan2) !important;
+}
+
+.MuiListItem-button:hover {
+    color: var(--he-light2) !important;
+    background: var(--he-dialog2) !important;
+}
+
 /* INDICATORS---------------------------------------------------------------- */
 .jp-DirListing-item.jp-mod-running .jp-DirListing-itemIcon:before {
     color: var(--he-green2) !important;
