@@ -68,6 +68,8 @@ def get_info():
     stop         - Stop {repo} container
     test         - Run testing on {repo}
     zsh          - Run ZSH session inside {repo} container
+    zsh-complete - Generate oh-my-zsh completions
+    zsh-root     - Run ZSH session as root inside {repo} container
 '''.format(repo=REPO))
 
     parser.add_argument(
@@ -87,6 +89,8 @@ def get_info():
         args = re.split(' +', temp.args[0])
 
     return mode, args
+
+
 def resolve(commands):
     # type: (List[str]) -> str
     '''
@@ -127,14 +131,15 @@ def resolve(commands):
     return cmd
 
 
-def line(text):
-    # type: (str) -> str
+def line(text, sep=' '):
+    # type: (str, str) -> str
     '''
     Convenience function for formatting a given block of text as series of
     commands.
 
     Args:
         text (text): Block of text.
+        sep (str, optional): Line separator. Default: ' '.
 
     Returns:
         str: Formatted command.
@@ -142,7 +147,7 @@ def line(text):
     output = re.sub('^\n|\n$', '', text)  # type: Any
     output = output.split('\n')
     output = [re.sub('^ +| +$', '', x) for x in output]
-    output = ' '.join(output) + ' '
+    output = sep.join(output) + sep
     return output
 
 
@@ -253,6 +258,8 @@ def coverage():
                 --cov-report html:/home/ubuntu/{repo}/docs/htmlcov
     ''')
     return cmd
+
+
 def remove_container():
     # type: () -> str
     '''
@@ -506,6 +513,8 @@ def fast_test_command():
         exit_repo(),
     ]
     return resolve(cmds)
+
+
 def full_docs_command():
     # type: () -> str
     '''
@@ -815,6 +824,14 @@ def state_command():
         'export IMAGE_EXISTS=`docker images {repo} | grep -v REPOSITORY`',
         'export CONTAINER_EXISTS=`docker ps -a -f name={repo} | grep -v CONTAINER`',
         'export RUNNING=`docker ps -a -f name={repo} -f status=running | grep -v CONTAINER`',
+        line(r'''
+            export PORTS=`docker ps -a -f name={repo}
+                --format '{{{{.Ports}}}}'
+            | sed -E 's/[0-9.]+:|:|\/[a-z]+//g'
+            | sed 's/, /\n/g' | uniq
+            | sed 's/->/{clear}->{blue}/'
+            | parallel "echo -n {{}} ' '"`
+        '''),
         line('''
             if [ -z "$IMAGE_EXISTS" ];
                 then export IMAGE_STATE="{red}absent{clear}";
@@ -832,7 +849,8 @@ def state_command():
         line('''echo
             "app: {cyan}{repo}{clear}:{yellow}$VERSION{clear} -
             image: $IMAGE_STATE -
-            container: $CONTAINER_STATE"
+            container: $CONTAINER_STATE -
+            ports: {blue}$PORTS{clear}"
         '''),
         exit_repo(),
     ]
@@ -871,6 +889,8 @@ def test_command():
         exit_repo(),
     ]
     return resolve(cmds)
+
+
 def tox_command():
     # type: () -> str
     '''
@@ -926,6 +946,53 @@ def zsh_command():
     return resolve(cmds)
 
 
+def zsh_complete_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to generate and install zsh completions.
+    '''
+    cmds = [
+        'export _COMP=~/.oh-my-zsh/custom/plugins/zsh-completions/src/_{repo}',
+        'touch $_COMP',
+        'echo "#compdef {repo} rec" > $_COMP',
+        'echo "" >> $_COMP',
+        'echo "local -a _subcommands" >> $_COMP',
+        'echo "_subcommands=(" >> $_COMP',
+        line('''
+            bin/{repo} --help
+                | grep '    - '
+                | sed -E 's/ +- /:/g'
+                | sed -E 's/^ +//g'
+                | sed -E "s/(.*)/    '\\1'/g"
+                | parallel "echo {{}} >> $_COMP"
+        '''),
+        'echo ")" >> $_COMP',
+        'echo "" >> $_COMP',
+        'echo "local expl" >> $_COMP',
+        'echo "" >> $_COMP',
+        'echo "_arguments \\\\" >> $_COMP',
+        'echo "    \'(-h --help)\'{{-h,--help}}\'[show help message]\' \\\\" >> $_COMP',
+        'echo "    \'(-d --dryrun)\'{{-d,--dryrun}}\'[print command]\' \\\\" >> $_COMP',
+        'echo "    \'*:: :->subcmds\' && return 0" >> $_COMP',
+        'echo "\n" >> $_COMP',
+        'echo "if (( CURRENT == 1 )); then" >> $_COMP',
+        'echo "    _describe -t commands \\"{repo} subcommand\\" _subcommands\" >> $_COMP',
+        'echo "    return" >> $_COMP',
+        'echo "fi" >> $_COMP',
+    ]
+    return resolve(cmds)
+
+
+def zsh_root_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to run a zsh session as root inside container.
+    '''
+    return re.sub('ubuntu:ubuntu', 'root:root', zsh_command())
+
+
 def get_illegal_mode_command():
     # type: () -> str
     '''
@@ -978,6 +1045,8 @@ def main():
         # 'tox': tox_command(),
         # 'version-up': version_up_command(args),
         'zsh': zsh_command(),
+        'zsh-complete': zsh_complete_command(),
+        'zsh-root': zsh_root_command(),
     }
     cmd = lut.get(mode, get_illegal_mode_command())
 
