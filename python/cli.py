@@ -66,7 +66,6 @@ def get_info():
     start        - Start {repo} container
     state        - State of {repo} container
     stop         - Stop {repo} container
-    test         - Run testing on {repo}
     zsh          - Run ZSH session inside {repo} container
     zsh-complete - Generate oh-my-zsh completions
     zsh-root     - Run ZSH session as root inside {repo} container
