@@ -1,0 +1,6 @@
+cd devops; git status; cd ..
+cd jupyterlab_henanigans; git status; cd ..
+cd lunchbox; git status; cd ..
+cd rolling-pin; git status; cd ..
+cd shekels; git status; cd ..
+cd spider; git status; cd ..
