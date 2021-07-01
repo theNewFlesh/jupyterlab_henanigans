@@ -207,24 +207,6 @@ def version_variable():
     return 'export VERSION=`cat version.txt`'
 
 
-def make_docs_dir():
-    # type: () -> str
-    '''
-    Returns:
-        str: Command to create docs directory in repo.
-    '''
-    cmd = line('''
-        docker exec
-            --interactive
-            --tty
-            --user {user}
-            -e PYTHONPATH="${pythonpath}:/home/ubuntu/{repo}/python"
-            -e REPO_ENV=True {repo}
-            mkdir -p /home/ubuntu/{repo}/docs
-    ''')
-    return cmd
-
-
 def docker_down():
     # type: () -> str
     '''
@@ -238,24 +220,6 @@ def docker_down():
             -f {repo_path}/docker/docker-compose.yml
             down;
         cd ..
-    ''')
-    return cmd
-
-
-def coverage():
-    # type: () -> str
-    '''
-    Returns:
-        str: Partial command to get generate coverage report.
-    '''
-    cmd = line(
-        docker_exec() + '''-e REPO_ENV=True {repo}
-            pytest
-                /home/ubuntu/{repo}/python
-                -c /home/ubuntu/{repo}/docker/pytest.ini
-                --cov /home/ubuntu/{repo}/python
-                --cov-config /home/ubuntu/{repo}/docker/pytest.ini
-                --cov-report html:/home/ubuntu/{repo}/docs/htmlcov
     ''')
     return cmd
 
@@ -285,83 +249,37 @@ def docker_exec():
     return cmd
 
 
-def create_package_repo():
+def package_repo():
     # type: () -> str
     '''
     Returns:
         str: Command to create a temporary repo in /tmp.
     '''
-    cmd = line(
-        docker_exec() + r'''{repo} zsh -c "
-            rm -rf /tmp/{repo} &&
-            cp -R /home/ubuntu/{repo}/python /tmp/{repo} &&
-            cp /home/ubuntu/{repo}/README.md /tmp/{repo}/README.md &&
-            cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/LICENSE &&
-            cp /home/ubuntu/{repo}/pip/MANIFEST.in /tmp/{repo}/MANIFEST.in &&
-            cp /home/ubuntu/{repo}/pip/setup.cfg /tmp/{repo}/ &&
-            cp /home/ubuntu/{repo}/pip/setup.py /tmp/{repo}/ &&
-            cp /home/ubuntu/{repo}/pip/version.txt /tmp/{repo}/ &&
-            cp /home/ubuntu/{repo}/docker/dev_requirements.txt /tmp/{repo}/ &&
-            cp /home/ubuntu/{repo}/docker/prod_requirements.txt /tmp/{repo}/ &&
-            cp -r /home/ubuntu/{repo}/templates /tmp/{repo}/{repo} &&
-            cp -r /home/ubuntu/{repo}/resources /tmp/{repo}/{repo} &&
-            find /tmp/{repo}/{repo}/resources -type f | grep -vE 'icon|test_'
-                | parallel 'rm -rf {{}}' &&
-            find /tmp/{repo} | grep -E '.*test.*\.py$|mock.*\.py$|__pycache__'
-                | parallel 'rm -rf {{}}' &&
-            find /tmp/{repo} -type f | grep __init__.py
-                | parallel 'rm -rf {{}};touch {{}}'
-        "
-    ''')
-    return cmd
-
-
-def tox_repo():
-    # type: () -> str
-    '''
-    Returns:
-        str: Command to build tox repo.
-    '''
-    cmd = line(
-        docker_exec() + r'''{repo} zsh -c "
-            rm -rf /tmp/{repo} &&
-            cp -R /home/ubuntu/{repo}/python /tmp/{repo} &&
-            cp -R /home/ubuntu/{repo}/docker/* /tmp/{repo}/ &&
-            cp -R /home/ubuntu/{repo}/resources /tmp/{repo}/{repo} &&
-            cp /home/ubuntu/{repo}/pip/* /tmp/{repo}/ &&
-            cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/ &&
-            cp /home/ubuntu/{repo}/README.md /tmp/{repo}/ &&
-            find /tmp/{repo}/{repo}/resources -type f
-                | grep -vE 'icon|test_' | parallel 'rm -rf {{}}' &&
-            cp -R /home/ubuntu/{repo}/templates /tmp/{repo}/{repo} &&
-            cp -R /home/ubuntu/{repo}/python/conftest.py /tmp/{repo}/ &&
-            find /tmp/{repo} | grep -E '__pycache__|\.pyc$' | parallel 'rm -rf'
+    cmd = docker_exec() + line(''' {repo} zsh -c "
+        cd /home/ubuntu/{repo} &&
+        rm -rf /tmp/{repo} &&
+        mkdir /tmp/{repo} &&
+        cp docker/dev_requirements.txt /tmp/{repo}/ &&
+        cp docker/prod_requirements.txt /tmp/{repo}/ &&
+        cp install.json /tmp/{repo} &&
+        cp LICENSE /tmp/{repo}/LICENSE &&
+        cp MANIFEST.in /tmp/{repo}/MANIFEST.in &&
+        cp package.json /tmp/{repo} &&
+        cp pyproject.toml /tmp/{repo}/pyproject.toml &&
+        cp README.md /tmp/{repo}/README.md &&
+        cp RELEASE.md /tmp/{repo}/RELEASE.md &&
+        cp setup.py /tmp/{repo}/ &&
+        cp ts*.json /tmp/{repo} &&
+        cp version.txt /tmp/{repo}/ &&
+        cp -R src /tmp/{repo} &&
+        cp -R style /tmp/{repo} &&
+        cp -R resources /tmp/{repo}
         "
     ''')
     return cmd
 
 
 # COMMANDS----------------------------------------------------------------------
-def app_command():
-    # type: () -> str
-    '''
-    Returns:
-        str: Command to start app.
-    '''
-    cmds = [
-        enter_repo(),
-        start(),
-        line(
-            docker_exec() + '''
-                -e DEBUG_MODE=True
-                -e REPO_ENV=True {repo}
-                python3.7 /home/ubuntu/{repo}/python/{repo}/server/app.py'''
-        ),
-        exit_repo(),
-    ]
-    return resolve(cmds)
-
-
 def build_dev_command():
     # type: () -> str
     '''
@@ -419,22 +337,6 @@ def container_id_command():
     return resolve(cmds)
 
 
-def coverage_command():
-    # type: () -> str
-    '''
-    Returns:
-        str: Command to get generate coverage report.
-    '''
-    cmds = [
-        enter_repo(),
-        start(),
-        make_docs_dir(),
-        coverage(),
-        exit_repo(),
-    ]
-    return resolve(cmds)
-
-
 def destroy_dev_command():
     # type: () -> str
     '''
@@ -466,125 +368,6 @@ def destroy_prod_command():
     return resolve(cmds)
 
 
-def docs_command():
-    # type: () -> str
-    '''
-    Returns:
-        str: Command to generate documentation.
-    '''
-    cmds = [
-        enter_repo(),
-        start(),
-        make_docs_dir(),
-        line(
-            docker_exec() + '''-e REPO_ENV=True {repo}
-                 zsh -c "
-                    pandoc /home/ubuntu/{repo}/README.md
-                        -o /home/ubuntu/{repo}/sphinx/intro.rst;
-                    sphinx-build
-                        /home/ubuntu/{repo}/sphinx
-                        /home/ubuntu/{repo}/docs;
-                    cp /home/ubuntu/{repo}/sphinx/style.css
-                    /home/ubuntu/{repo}/docs/_static/style.css;
-                    touch /home/ubuntu/{repo}/docs/.nojekyll;
-                    mkdir -p /home/ubuntu/{repo}/docs/resources;
-                "
-        '''),
-        exit_repo(),
-    ]
-    return resolve(cmds)
-
-
-def fast_test_command():
-    # type: () -> str
-    '''
-    Returns:
-        str: Command to run test not marked slow.
-    '''
-    cmds = [
-        enter_repo(),
-        start(),
-        line(
-            docker_exec() + '''-e REPO_ENV=True -e SKIP_SLOW_TESTS=true {repo}
-                pytest
-                    /home/ubuntu/{repo}/python
-                    -c /home/ubuntu/{repo}/docker/pytest.ini
-        '''),
-        exit_repo(),
-    ]
-    return resolve(cmds)
-
-
-def full_docs_command():
-    # type: () -> str
-    '''
-    Generates:
-
-      * documentation
-      * code coverage report
-      * dependency architecture diagram
-      * code metrics plots
-
-    Returns:
-        str: Command.
-    '''
-    cmds = [
-        enter_repo(),
-        start(),
-        make_docs_dir(),
-        line(
-            docker_exec() + '''-e REPO_ENV=True {repo}
-                 zsh -c "
-                    pandoc
-                        /home/ubuntu/{repo}/README.md
-                        -o /home/ubuntu/{repo}/sphinx/intro.rst;
-                    sphinx-build
-                        /home/ubuntu/{repo}/sphinx
-                        /home/ubuntu/{repo}/docs;
-                    cp
-                        /home/ubuntu/{repo}/sphinx/style.css
-                        /home/ubuntu/{repo}/docs/_static/style.css;
-                    touch /home/ubuntu/{repo}/docs/.nojekyll;
-                    mkdir -p /home/ubuntu/{repo}/docs/resources;
-                "
-        '''),
-        coverage(),
-        line(
-            docker_exec() + '''-e REPO_ENV=True {repo}
-                python3.7 -c "
-                    import re;
-                    from rolling_pin.repo_etl import RepoETL;
-                    etl = RepoETL('/home/ubuntu/{repo}/python');
-                    regex = 'test|mock';
-                    data = etl._data.copy();
-                    func = lambda x: not bool(re.search(regex, x));
-                    mask = data.node_name.apply(func);
-                    data = data[mask];
-                    data.reset_index(inplace=True, drop=True);
-                    data.dependencies = data.dependencies.apply(
-                        lambda x: list(filter(func, x))
-                    );
-                    etl._data = data;
-                    etl.write(
-                        '/home/ubuntu/{repo}/docs/architecture.svg',
-                        orient='lr'
-                    );
-                "
-        '''),
-        line(
-            docker_exec() + '''-e REPO_ENV=True {repo}
-                python3.7 -c "
-                    from rolling_pin.radon_etl import RadonETL;
-                    etl = RadonETL('/home/ubuntu/{repo}/python');
-                    etl.write_plots('/home/ubuntu/{repo}/docs/plots.html');
-                    etl.write_tables('/home/ubuntu/{repo}/docs');
-                "
-        '''),
-        exit_repo(),
-    ]
-    return resolve(cmds)
-
-
 def image_id_command():
     # type: () -> str
     '''
@@ -610,39 +393,16 @@ def lab_command():
         enter_repo(),
         start(),
         line(
-            docker_exec() + '''-e REPO_ENV=True {repo}
+            docker_exec() + '''-w /home/ubuntu/{repo} {repo} zsh -c "
+                cp docker/prod_requirements.txt . &&
+                cp docker/dev_requirements.txt . &&
                 sudo /home/ubuntu/.local/bin/jupyter labextension develop --overwrite &&
+                rm prod_requirements.txt &&
+                rm dev_requirements.txt &&
                 jlpm watch &
                 jupyter lab --allow-root --ip=0.0.0.0 --no-browser
+            "
         '''),
-        exit_repo(),
-    ]
-    return resolve(cmds)
-
-
-def lint_command():
-    # type: () -> str
-    '''
-    Returns:
-        str: Command to run linting and type analysis.
-    '''
-    cmds = [
-        enter_repo(),
-        start(),
-        'echo LINTING',
-        line(
-            docker_exec() + '''-e REPO_ENV=True {repo}
-                flake8
-                    /home/ubuntu/{repo}/python
-                    --config /home/ubuntu/{repo}/docker/flake8.ini'''
-        ),
-        'echo TYPE CHECKING',
-        line(
-            docker_exec() + '''-e REPO_ENV=True {repo}
-                mypy
-                    /home/ubuntu/{repo}/python
-                    --config-file /home/ubuntu/{repo}/docker/mypy.ini'''
-        ),
         exit_repo(),
     ]
     return resolve(cmds)
@@ -657,8 +417,15 @@ def package_command():
     cmds = [
         enter_repo(),
         start(),
-        create_package_repo(),
-        docker_exec() + ' -w /tmp/{repo} {repo} python3.7 setup.py sdist',
+        package_repo(),
+        line(
+            docker_exec() + '''{repo} zsh -c "
+                cd /tmp/{repo} &&
+                npm install &&
+                jlpm run build &&
+                python3.7 setup.py sdist
+            "
+        '''),
         exit_repo(),
     ]
     return resolve(cmds)
@@ -703,9 +470,7 @@ def publish_command():
     cmds = [
         enter_repo(),
         start(),
-        tox_repo(),
-        docker_exec() + '{repo} zsh -c "cd /tmp/{repo} && tox"',
-        create_package_repo(),
+        package_repo(),
         docker_exec() + ' -w /tmp/{repo} {repo} python3.7 setup.py sdist',
         docker_exec() + ' -w /tmp/{repo} {repo} twine upload dist/*',
         docker_exec() + ' {repo} rm -rf /tmp/{repo}',
@@ -871,66 +636,6 @@ def stop_command():
     return resolve(cmds)
 
 
-def test_command():
-    # type: () -> str
-    '''
-    Returns:
-        str: Command to run tests.
-    '''
-    cmds = [
-        enter_repo(),
-        start(),
-        line(
-            docker_exec() + '''-e REPO_ENV=True {repo}
-                pytest
-                    /home/ubuntu/{repo}/python
-                    -c /home/ubuntu/{repo}/docker/pytest.ini
-        '''),
-        exit_repo(),
-    ]
-    return resolve(cmds)
-
-
-def tox_command():
-    # type: () -> str
-    '''
-    Returns:
-        str: Command to run tox.
-    '''
-    cmds = [
-        enter_repo(),
-        start(),
-        tox_repo(),
-        docker_exec() + '{repo} zsh -c "cd /tmp/{repo} && tox"',
-        exit_repo(),
-    ]
-    return resolve(cmds)
-
-
-def version_up_command(args):
-    # type: (list) -> str
-    '''
-    Sets pip/version.txt to given value. Then calls full-docs.
-
-    Returns:
-        str: Command.
-    '''
-    if args == ['']:
-        cmds = [
-            'echo "Please provide a version after the {cyan}-a{clear} flag."'
-        ]
-        return resolve(cmds)
-
-    cmds = [
-        enter_repo(),
-        'echo {} > pip/version.txt'.format(args[0]),
-        exit_repo(),
-    ]
-    cmd = resolve(cmds)
-    cmd = cmd + ' && ' + full_docs_command()
-    return cmd
-
-
 def zsh_command():
     # type: () -> str
     '''
@@ -1017,19 +722,13 @@ def main():
     '''
     mode, args = get_info()
     lut = {
-        # 'app': app_command(),
         'build': build_dev_command(),
         'build-prod': build_prod_command(),
         'container': container_id_command(),
-        # 'coverage': coverage_command(),
         'destroy': destroy_dev_command(),
         'destroy-prod': destroy_prod_command(),
-        # 'docs': docs_command(),
-        # 'fast-test': fast_test_command(),
-        # 'full-docs': full_docs_command(),
         'image': image_id_command(),
         'lab': lab_command(),
-        # 'lint': lint_command(),
         'package': package_command(),
         'prod': prod_command(args),
         'publish': publish_command(),
@@ -1041,9 +740,6 @@ def main():
         'start': start_command(),
         'state': state_command(),
         'stop': stop_command(),
-        'test': test_command(),
-        # 'tox': tox_command(),
-        # 'version-up': version_up_command(args),
         'zsh': zsh_command(),
         'zsh-complete': zsh_complete_command(),
         'zsh-root': zsh_root_command(),
