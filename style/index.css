@@ -201,6 +201,10 @@ button.jp-ToolbarButtonComponent .jp-ToolbarButtonComponent-label:hover,
     background: var(--he-grey1) !important;
 }
 
+.jp-Completer-item.jp-mod-active {
+    background: var(--he-grey2) !important;
+}
+
 /* PLUGIN-MENU--------------------------------------------------------------- */
 #setting-editor .jp-PluginList ul {
     background: var(--he-bg1) !important;
