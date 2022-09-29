@@ -58,7 +58,8 @@
                 "command": [
                     "cp docker/prod_requirements.txt . && ",
                     "cp docker/dev_requirements.txt . && ",
-                    "sudo /home/ubuntu/.local/bin/jupyter labextension develop --overwrite &&",
+                    "sudo /home/ubuntu/.local/bin/jupyter",
+                        "labextension develop --overwrite &&",
                     "rm prod_requirements.txt && ",
                     "rm dev_requirements.txt && ",
                     "jlpm watch &",
@@ -126,7 +127,8 @@
             {
                 "label": "requirements",
                 "command": [
-                    "python3.7 -m pip list --format freeze > docker/frozen_requirements.txt && "
+                    "python3.7 -m pip list --format freeze",
+                    "> docker/frozen_requirements.txt"
                 ],
                 "type": "shell"
             }
