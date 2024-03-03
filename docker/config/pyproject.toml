@@ -31,14 +31,13 @@ dependencies = [
 repository = "https://github.com/theNewFlesh/jupyterlab_henanigans"
 documentation = "https://theNewFlesh.github.io/jupyterlab_henanigans"
 
-[project.optional-dependencies]
-
 [tool.pdm.dev-dependencies]
 lab = []
 dev = [
     "jupyter_packaging",
     "jupyterlab-git",
     "jupyterlab>=3.0.0",
+    "rolling-pin>=0.9.5",
 ]
 test = []
 
