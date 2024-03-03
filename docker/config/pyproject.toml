@@ -20,7 +20,6 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Typing :: Typed",
 ]
 requires-python = ">=3.10"
@@ -70,7 +69,7 @@ omit = [
 
 [tool.mypy]
 cache_dir = "/home/ubuntu/.mypy_cache"
-python_version = "3.11"
+python_version = "3.10"
 ignore_missing_imports = true
 warn_no_return = false
 pretty = true
