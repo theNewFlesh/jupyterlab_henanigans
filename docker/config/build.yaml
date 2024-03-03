@@ -12,8 +12,8 @@ source_rules:
 #     include: ".*"
 #     exclude: "__pycache__"
 rename_rules:
-    - regex: "/extension"
-      replace: ""
+  - regex: "/extension"
+    replace: ""
 #   - regex: "/home/ubuntu/jupyterlab_henanigans"
 #     replace: "/home/ubuntu/build/repo"
 #   - regex: ".*/resources"
