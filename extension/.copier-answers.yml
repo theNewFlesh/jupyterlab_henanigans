@@ -1,0 +1,19 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v4.2.5
+_src_path: https://github.com/jupyterlab/extension-template
+author_email: alexander.g.braun@gmail.com
+author_name: Alex Braun
+data_format: string
+file_extension: ''
+has_binder: false
+has_settings: false
+kind: theme
+labextension_name: '@TheNewFlesh/jupyterlab_henanigans'
+mimetype: ''
+mimetype_name: ''
+project_short_description: A dark, easy-on-the-eyes theme for JupyterLab.
+python_name: jupyterlab_henanigans
+repository: https://github.com/theNewFlesh/jupyterlab_henanigans
+test: false
+viewer_name: ''
+

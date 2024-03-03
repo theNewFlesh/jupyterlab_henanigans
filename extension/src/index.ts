@@ -6,23 +6,20 @@ import {
 import { IThemeManager } from '@jupyterlab/apputils';
 
 /**
- * A plugin for the Jupyter Henanigans Theme.
+ * Initialization data for the @TheNewFlesh/jupyterlab_henanigans extension.
  */
 const plugin: JupyterFrontEndPlugin<void> = {
-  id: '@theNewFlesh/jupyterlab_henanigans:plugin',
-  description: 'Henanigans theme.',
-  requires: [IThemeManager],
+  id: '@TheNewFlesh/jupyterlab_henanigans:plugin',
+  description: 'A dark, easy-on-the-eyes theme for JupyterLab.',
   autoStart: true,
+  requires: [IThemeManager],
   activate: (app: JupyterFrontEnd, manager: IThemeManager) => {
-    console.log(
-      'JupyterLab plugin @theNewFlesh/jupyterlab_henanigans is activated!'
-    );
-    const style = '@theNewFlesh/jupyterlab_henanigans/index.css';
+    console.log('JupyterLab extension @TheNewFlesh/jupyterlab_henanigans is activated!');
+    const style = '@TheNewFlesh/jupyterlab_henanigans/index.css';
+
     manager.register({
-      name: 'Henanigans',
-      displayName: 'Henanigans',
-      isLight: false,
-      //   themeScrollbars: true,
+      name: '@TheNewFlesh/jupyterlab_henanigans',
+      isLight: true,
       load: () => manager.loadCSS(style),
       unload: () => Promise.resolve(undefined)
     });
