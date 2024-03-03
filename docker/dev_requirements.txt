@@ -1,3 +1,4 @@
+jupyter_core
 jupyter_packaging
 jupyterlab-git
 jupyterlab>=3.0.0

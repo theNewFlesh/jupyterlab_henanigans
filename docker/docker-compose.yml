@@ -4,7 +4,7 @@ volumes:
 services:
   jupyterlab_henanigans:
     container_name: jupyterlab_henanigans
-    image: jupyterlab_henanigans
+    image: jupyterlab_henanigans:latest
     build:
       context: .
       dockerfile: dev.dockerfile
