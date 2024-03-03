@@ -75,7 +75,7 @@ RUN echo "\n${CYAN}INSTALL PYTHON${CLEAR}"; \
         python3.9-distutils \
         python3.8-dev \
         python3.8-venv \
-        python3.8-distutils
+        python3.8-distutils \
     && rm -rf /var/lib/apt/lists/*
 
 # install pip
