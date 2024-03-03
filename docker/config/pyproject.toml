@@ -31,16 +31,6 @@ dependencies = [
 repository = "https://github.com/theNewFlesh/jupyterlab_henanigans"
 documentation = "https://theNewFlesh.github.io/jupyterlab_henanigans"
 
-[tool.pdm.dev-dependencies]
-lab = []
-dev = [
-    "jupyter_packaging",
-    "jupyterlab-git",
-    "jupyterlab>=3.0.0",
-    "rolling-pin>=0.9.5",
-]
-test = []
-
 [tool.pytest.ini_options]
 cache_dir = "/home/ubuntu/.pytest_cache"
 filterwarnings = [
@@ -73,6 +63,17 @@ ignore_missing_imports = true
 warn_no_return = false
 pretty = true
 warn_unused_ignores = true
+
+[tool.pdm.dev-dependencies]
+lab = []
+dev = [
+    "jupyter_packaging",
+    "jupyterlab-git",
+    "jupyterlab>=3.0.0",
+    "rolling-pin>=0.9.5",
+    "copier>=7.2",
+]
+test = []
 
 [build-system]
 requires = ["jupyter_packaging~=0.10,<2", "jupyterlab~=3.0"]
