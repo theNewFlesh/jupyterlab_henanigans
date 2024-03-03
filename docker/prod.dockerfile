@@ -1,4 +1,4 @@
-FROM ubuntu:18.04 AS base
+FROM ubuntu:22.04 AS base
 
 USER root
 
@@ -24,21 +24,24 @@ RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${CLEAR}"; \
     apt update && \
     apt install -y \
         software-properties-common \
-        wget
+        wget && \
+    rm -rf /var/lib/apt/lists/*
 
-# install python3.7 and pip
-RUN echo "\n${CYAN}SETUP PYTHON3.7${CLEAR}"; \
+# install python3.11 and pip
+RUN echo "\n${CYAN}SETUP PYTHON3.11${CLEAR}"; \
     add-apt-repository -y ppa:deadsnakes/ppa && \
     apt update && \
-    apt install --fix-missing -y \
-        python3.7 && \
+    apt install --fix-missing -y python3.11 && \
+    rm -rf /var/lib/apt/lists/* && \
     wget https://bootstrap.pypa.io/get-pip.py && \
-    python3.7 get-pip.py && \
+    python3.11 get-pip.py && \
     rm -rf /home/ubuntu/get-pip.py
 
 # install jupyterlab_henanigans
 USER ubuntu
 ENV REPO='jupyterlab_henanigans'
 ENV PYTHONPATH "${PYTHONPATH}:/home/ubuntu/$REPO/python"
-RUN echo "\n${CYAN}INSTALL $REPO${CLEAR}"; \
-    pip3.7 install jupyterlab_henanigans
+RUN echo "\n${CYAN}INSTALL JUPYTERLAB_HENANIGANS{CLEAR}"; \
+    pip3.11 install --user --upgrade jupyterlab_henanigans
+
+ENV PATH=$PATH:/home/ubuntu/.local/bin
