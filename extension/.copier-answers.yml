@@ -16,4 +16,3 @@ python_name: jupyterlab_henanigans
 repository: https://github.com/theNewFlesh/jupyterlab_henanigans
 test: false
 viewer_name: ''
-
