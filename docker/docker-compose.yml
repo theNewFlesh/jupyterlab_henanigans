@@ -19,3 +19,4 @@ services:
       - ./config/jupyter:/home/ubuntu/.jupyter
       - ./config/zshrc:/home/ubuntu/.zshrc
     working_dir: "/home/ubuntu"
+    command: "tail -f /dev/null"
