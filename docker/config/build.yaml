@@ -1,5 +1,6 @@
 source_rules:
   - path: /home/ubuntu/jupyterlab_henanigans/extension
+    exclude: "eslint|prettier"
 #   - path: /home/ubuntu/jupyterlab_henanigans
 #     include: "LICENSE|README\\.md"
 #     exclude: "/\\.|docker"
