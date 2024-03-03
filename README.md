@@ -1,3 +1,31 @@
+<p>
+    <a href="https://www.linkedin.com/in/alexandergbraun" rel="nofollow noreferrer">
+        <img src="https://www.gomezaparicio.com/wp-content/uploads/2012/03/linkedin-logo-1-150x150.png"
+             alt="linkedin" width="30px" height="30px"
+        >
+    </a>
+    <a href="https://github.com/theNewFlesh" rel="nofollow noreferrer">
+        <img src="https://tadeuzagallo.com/GithubPulse/assets/img/app-icon-github.png"
+             alt="github" width="30px" height="30px"
+        >
+    </a>
+    <a href="https://pypi.org/user/the-new-flesh" rel="nofollow noreferrer">
+        <img src="https://cdn.iconscout.com/icon/free/png-256/python-2-226051.png"
+             alt="pypi" width="30px" height="30px"
+        >
+    </a>
+    <a href="http://vimeo.com/user3965452" rel="nofollow noreferrer">
+        <img src="https://cdn1.iconfinder.com/data/icons/somacro___dpi_social_media_icons_by_vervex-dfjq/500/vimeo.png"
+             alt="vimeo" width="30px" height="30px"
+        >
+    </a>
+    <a href="http://www.alexgbraun.com" rel="nofollow noreferrer">
+        <img src="https://i.ibb.co/fvyMkpM/logo.png"
+             alt="alexgbraun" width="30px" height="30px"
+        >
+    </a>
+</p>
+
 <!-- <img id="logo" src="resources/logo.png" style="max-width: 717px"> -->
 
 [![](https://img.shields.io/badge/License-MIT-F77E70?style=for-the-badge)](https://github.com/theNewFlesh/jupyterlab_henanigans/blob/master/LICENSE)
@@ -8,6 +36,8 @@
 # Introduction
 
 Henanigans theme for Jupyter Lab.
+
+<img src='resources/screenshot.png' width='800px'>
 
 See [documentation](https://theNewFlesh.github.io/jupyterlab_henanigans/) for details.
 
@@ -30,6 +60,52 @@ See [documentation](https://theNewFlesh.github.io/jupyterlab_henanigans/) for de
 The service should take a few minutes to start up.
 
 Run `bin/jupyterlab_henanigans --help` for more help on the command line tool.
+
+### Extension Build
+
+Note: You will need NodeJS to build the extension package.
+
+The `jlpm` command is JupyterLab's pinned version of
+[yarn](https://yarnpkg.com/) that is installed with JupyterLab. You may use
+`yarn` or `npm` in lieu of `jlpm` below.
+
+```bash
+# Clone the repo to your local environment
+# Change directory to the jupyterlab_henanigans directory
+# Install package in development mode
+pip install -e .
+# Link your development version of the extension with JupyterLab
+jupyter labextension develop . --overwrite
+# Rebuild extension Typescript source after making changes
+jlpm run build
+```
+
+You can watch the source directory and run JupyterLab at the same time in different terminals to watch for changes in the extension's source and automatically rebuild the extension.
+
+```bash
+# Watch the source directory in one terminal, automatically rebuilding when needed
+jlpm run watch
+# Run JupyterLab in another terminal
+jupyter lab
+```
+
+With the watch command running, every saved change will immediately be built locally and available in your running JupyterLab. Refresh JupyterLab to load the change in your browser (you may need to wait several seconds for the extension to be rebuilt).
+
+By default, the `jlpm run build` command generates the source maps for this extension to make it easier to debug using the browser dev tools. To also generate source maps for the JupyterLab core extensions, you can run the following command:
+
+```bash
+jupyter lab build --minimize=False
+```
+
+### Development uninstall
+
+```bash
+pip uninstall jupyterlab_henanigans
+```
+
+In development mode, you will also need to remove the symlink created by `jupyter labextension develop`
+command. To find its location, you can run `jupyter labextension list` to figure out where the `labextensions`
+folder is located. Then you can remove the symlink named `@theNewFlesh/jupyterlab_henanigans` within that folder.
 
 ### ZSH Setup
 
