@@ -75,10 +75,7 @@ RUN echo "\n${CYAN}INSTALL PYTHON${CLEAR}"; \
         python3.9-distutils \
         python3.8-dev \
         python3.8-venv \
-        python3.8-distutils \
-        python3.7-dev \
-        python3.7-venv \
-        python3.7-distutils \
+        python3.8-distutils
     && rm -rf /var/lib/apt/lists/*
 
 # install pip
@@ -179,8 +176,7 @@ RUN echo "\n${CYAN}INSTALL PROD ENVIRONMENTS${CLEAR}"; \
     x_env_init prod 3.11 && \
     x_env_init prod 3.10 && \
     x_env_init prod 3.9 && \
-    x_env_init prod 3.8 && \
-    x_env_init prod 3.7
+    x_env_init prod 3.8
 
 # build jupyter lab
 RUN echo "\n${CYAN}BUILD JUPYTER LAB${CLEAR}"; \
