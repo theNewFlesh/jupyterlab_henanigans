@@ -71,7 +71,9 @@ dev = [
     "jupyterlab-git",
     "jupyterlab>=3.0.0",
     "rolling-pin>=0.9.5",
-    "copier>=7.2",
+    "copier~=7.2",
+    "jinja2-time>=0.2.0",
+    "pydantic<2.0.0",
 ]
 test = []
 
