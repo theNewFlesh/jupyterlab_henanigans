@@ -240,8 +240,9 @@ _x_build () {
     rolling-pin conform \
         $CONFIG_DIR/build.yaml \
         --groups base,$1;
-    _x_gen_pyproject $1 > $BUILD_DIR/repo/pyproject.toml;
-    touch $BUILD_DIR/repo/$REPO_SNAKE_CASE/py.typed;
+    cd $BUILD_DIR;
+    jupyter labextension develop . --overwrite;
+    jlpm run build;
 }
 
 _x_build_show_dir () {

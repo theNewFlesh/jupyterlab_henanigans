@@ -1,6 +1,6 @@
 source_rules:
   - path: /home/ubuntu/jupyterlab_henanigans/extension
-    exclude: "eslint|prettier"
+    exclude: "eslint|prettier|yarn|node_modules"
 #   - path: /home/ubuntu/jupyterlab_henanigans
 #     include: "LICENSE|README\\.md"
 #     exclude: "/\\.|docker"
@@ -13,10 +13,10 @@ source_rules:
 #     include: ".*"
 #     exclude: "__pycache__"
 rename_rules:
+  - regex: "/home/ubuntu/jupyterlab_henanigans"
+    replace: "/home/ubuntu/build"
   - regex: "/extension"
     replace: ""
-#   - regex: "/home/ubuntu/jupyterlab_henanigans"
-#     replace: "/home/ubuntu/build/repo"
 #   - regex: ".*/resources"
 #     replace: "/home/ubuntu/build/resources"
 #   - regex: "/python|/docker|/config"
