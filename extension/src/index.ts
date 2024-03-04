@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module jupyterlab_henanigans
+ */
+
 import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
@@ -19,7 +24,9 @@ const plugin: JupyterFrontEndPlugin<void> = {
 
     manager.register({
       name: '@TheNewFlesh/jupyterlab_henanigans',
-      isLight: true,
+      displayName: 'Henanigans',
+      isLight: false,
+      themeScrollbars: true,
       load: () => manager.loadCSS(style),
       unload: () => Promise.resolve(undefined)
     });
