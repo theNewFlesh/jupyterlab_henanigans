@@ -241,11 +241,10 @@ _x_build () {
         $CONFIG_DIR/build.yaml \
         --groups base,$1;
     cd $BUILD_DIR/repo;
-    npm install && \
-    jlpm && \
-    jlpm run build && \
-    # python3 -m build . --sdist && \
-    jupyter labextension develop . --overwrite;
+    npm install;
+    mv node_modules ../;
+    cd $BUILD_DIR;
+    python3 -m build repo --sdist --outdir dist;
 }
 
 _x_build_show_dir () {
