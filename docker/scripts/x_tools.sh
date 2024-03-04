@@ -241,9 +241,11 @@ _x_build () {
         $CONFIG_DIR/build.yaml \
         --groups base,$1;
     cd $BUILD_DIR/repo;
-    # jupyter labextension develop . --overwrite;
-    # jlpm run build;
-    # python3 -m build . --sdist;
+    npm install && \
+    jlpm && \
+    jlpm run build && \
+    # python3 -m build . --sdist && \
+    jupyter labextension develop . --overwrite;
 }
 
 _x_build_show_dir () {
@@ -279,8 +281,8 @@ x_build_prod () {
     # Build production version of repo for publishing
     echo "${CYAN2}BUILDING PROD REPO${CLEAR}\n";
     _x_build prod;
-    _x_gen_pyproject package > $BUILD_DIR/repo/pyproject.toml;
-    _x_build_show_dir;
+    # _x_gen_pyproject package > $BUILD_DIR/repo/pyproject.toml;
+    # _x_build_show_dir;
 }
 
 _x_build_publish () {
