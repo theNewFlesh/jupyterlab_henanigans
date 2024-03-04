@@ -244,7 +244,7 @@ _x_build () {
     jlpm install;
     mv node_modules ../;
     cd $BUILD_DIR;
-    python3 -m build repo --sdist --outdir dist;
+    python3 -m build repo --wheel --outdir dist;
 }
 
 _x_build_show_dir () {
