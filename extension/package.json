@@ -1,6 +1,6 @@
 {
     "name": "@TheNewFlesh/jupyterlab_henanigans",
-    "version": "0.1.0",
+    "version": "0.2.3",
     "description": "A dark, easy-on-the-eyes theme for JupyterLab.",
     "keywords": [
         "jupyter",
