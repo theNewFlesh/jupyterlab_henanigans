@@ -241,7 +241,7 @@ _x_build () {
         $CONFIG_DIR/build.yaml \
         --groups base,$1;
     cd $BUILD_DIR/repo;
-    npm install;
+    jlpm install;
     mv node_modules ../;
     cd $BUILD_DIR;
     python3 -m build repo --sdist --outdir dist;
@@ -281,7 +281,7 @@ x_build_prod () {
     echo "${CYAN2}BUILDING PROD REPO${CLEAR}\n";
     _x_build prod;
     # _x_gen_pyproject package > $BUILD_DIR/repo/pyproject.toml;
-    # _x_build_show_dir;
+    _x_build_show_dir;
 }
 
 _x_build_publish () {
