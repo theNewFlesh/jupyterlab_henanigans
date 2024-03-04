@@ -240,7 +240,7 @@ _x_build () {
     rolling-pin conform \
         $CONFIG_DIR/build.yaml \
         --groups base,$1;
-    cd $BUILD_DIR;
+    cd $BUILD_DIR/repo;
     jupyter labextension develop . --overwrite;
     jlpm run build;
 }
