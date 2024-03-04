@@ -241,8 +241,9 @@ _x_build () {
         $CONFIG_DIR/build.yaml \
         --groups base,$1;
     cd $BUILD_DIR/repo;
-    jupyter labextension develop . --overwrite;
-    jlpm run build;
+    # jupyter labextension develop . --overwrite;
+    # jlpm run build;
+    # python3 -m build . --sdist;
 }
 
 _x_build_show_dir () {

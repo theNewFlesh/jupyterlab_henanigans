@@ -79,7 +79,7 @@ dev = [
 test = []
 
 [build-system]
-requires = ["jupyter_packaging~=0.10,<2", "jupyterlab~=3.0"]
+requires = ["jupyter_packaging>=0.10", "jupyterlab>=4.0.0"]
 build-backend = "jupyter_packaging.build_api"
 
 [tool.jupyter-packaging.options]
