@@ -6,7 +6,6 @@ authors = [
     {name = "Alex Braun", email = "alexander.g.braun@gmail.com"},
 ]
 readme = "README.md"
-license = "MIT"
 keywords = [
     "jupyter",
     "jupyter-lab",
@@ -67,14 +66,15 @@ warn_unused_ignores = true
 [tool.pdm.dev-dependencies]
 lab = []
 dev = [
-    "jupyter_packaging",
-    "jupyterlab-git",
-    "jupyterlab>=3.0.0",
-    "rolling-pin>=0.9.5",
+    "build",
     "copier~=7.2",
     "jinja2-time>=0.2.0",
-    "pydantic<2.0.0",
+    "jupyter_packaging",
+    "jupyterlab-git",
+    "jupyterlab>=4.0.0,<5",
     "pip>=24.0",
+    "pydantic<2.0.0",
+    "rolling-pin>=0.9.5",
 ]
 test = []
 
