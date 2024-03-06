@@ -72,6 +72,7 @@ lab = []
 dev = [
     "build",
     "copier~=7.2",
+    "hatchling>=1.21.1",
     "jinja2-time>=0.2.0",
     "jupyter_packaging",
     "jupyter_server>=1.6",
