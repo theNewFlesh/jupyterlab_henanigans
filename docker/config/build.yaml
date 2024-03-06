@@ -3,13 +3,8 @@ source_rules:
     # exclude: "eslint|prettier|yarn|node_modules|copier|pnp|CHANGELOG|package-lock|RELEASE"
   - path: /home/ubuntu/jupyterlab_henanigans
     include: "LICENSE"
-  - path: /home/ubuntu/jupyterlab_henanigans/python/jupyterlab_henanigans
-    include: "\\.py$"
-    exclude: "cli\\.py"
 rename_rules:
   - regex: "/home/ubuntu/jupyterlab_henanigans"
-    replace: "/home/ubuntu/build/repo"
+    replace: "/home/ubuntu/build"
   - regex: "/extension"
     replace: ""
-  - regex: "/python"
-    replace: "/"

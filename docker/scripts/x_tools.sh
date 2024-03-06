@@ -240,11 +240,6 @@ _x_build () {
     rolling-pin conform \
         $CONFIG_DIR/build.yaml \
         --groups base,$1;
-    cd $BUILD_DIR/repo;
-    jlpm install;
-    mv node_modules ../;
-    cd $BUILD_DIR;
-    python3 -m build repo --wheel --outdir dist;
 }
 
 _x_build_show_dir () {
@@ -281,7 +276,7 @@ x_build_prod () {
     echo "${CYAN2}BUILDING PROD REPO${CLEAR}\n";
     _x_build prod;
     # _x_gen_pyproject package > $BUILD_DIR/repo/pyproject.toml;
-    _x_build_show_dir;
+    # _x_build_show_dir;
 }
 
 _x_build_publish () {
@@ -316,10 +311,12 @@ x_build_publish () {
 
 x_build_test () {
     # Build test version of repo for prod testing
-    echo "${CYAN2}DEPLOY JUPYTER LAB EXTENSION${CLEAR}\n";
+    echo "${CYAN2}BUILDING TEST REPO${CLEAR}\n";
     x_env_activate_dev;
-    cd $REPO_DIR/extension;
+    _x_build test;
+    cd $BUILD_DIR;
     jupyter labextension develop --clean --debug --overwrite .;
+    echo "${GREEN2}DONE${CLEAR}\n";
 }
 
 # DOCS-FUNCTIONS----------------------------------------------------------------
