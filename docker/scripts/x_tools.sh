@@ -315,9 +315,7 @@ x_build_test () {
     echo "${CYAN2}BUILDING TEST REPO${CLEAR}\n";
     x_env_activate_dev;
     _x_build test;
-    local test_repo=$BUILD_DIR/$REPO;
-    cd $test_repo;
-    jupyter labextension develop --clean --debug --overwrite $test_repo;
+    jupyter labextension develop --clean --debug --overwrite $BUILD_DIR/$REPO;
     echo "${GREEN2}DONE${CLEAR}\n";
 }
 
