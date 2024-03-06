@@ -1,10 +1,8 @@
-version: "3.4"
-volumes:
-  cache:
+version: "3.8"
 services:
   jupyterlab_henanigans:
     container_name: jupyterlab_henanigans
-    image: jupyterlab_henanigans:latest
+    image: jupyterlab_henanigans:dev
     build:
       context: .
       dockerfile: dev.dockerfile
@@ -13,11 +11,12 @@ services:
       - "1180:8080"
     userns_mode: "host"
     user: ubuntu
+    env_file:
+      - config/dev-env
     volumes:
       - ../:/home/ubuntu/jupyterlab_henanigans
-      - ./jupyter:/home/ubuntu/.jupyter
-      - ./ipython:/home/ubuntu/.ipython
-      - ../artifacts:/tmp/dash_artifacts
-      - ~/.ssh:/home/ubuntu/.ssh
+      - ~/.ssh:/home/ubuntu/.ssh:ro
+      - ./config/jupyter:/home/ubuntu/.jupyter
+      - ./config/zshrc:/home/ubuntu/.zshrc
     working_dir: "/home/ubuntu"
     command: "tail -f /dev/null"

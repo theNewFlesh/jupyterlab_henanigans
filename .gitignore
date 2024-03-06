@@ -1,5 +1,6 @@
 # ansible
 devops/ansible/**/*.retry
+ansible/password.txt
 
 # c
 *.so
@@ -13,6 +14,7 @@ flask_monitoringdashboard*
 .ipynb_checkpoints
 *.jupyterlab-workspace
 **/jupyter/migrated
+**/jupyter/serverconfig
 **/jupyter/workspaces
 */ipython/*
 
@@ -39,6 +41,9 @@ parts
 sdist
 var
 
+# pdm
+__pypackages__
+
 # python
 __pycache__
 *.py[cod]
@@ -64,14 +69,24 @@ vscode
 /.npm/*
 node_modules
 
+# zsh
+**/.zsh_cache
+
+# yarn
+.yarn
 
 *.bundle.*
 lib/
 node_modules/
+*.log
+.eslintcache
+.stylelintcache
 *.egg-info/
 .ipynb_checkpoints
 *.tsbuildinfo
-jupyterlab_henanigans/labextension
+extension/henanigans/labextension
+# Version file is handled by hatchling
+extension/henanigans/_version.py
 
 # Created by https://www.gitignore.io/api/python
 # Edit at https://www.gitignore.io/?templates=python
@@ -123,6 +138,7 @@ htmlcov/
 .coverage.*
 .cache
 nosetests.xml
+coverage/
 coverage.xml
 *.cover
 .hypothesis/
@@ -177,3 +193,6 @@ dmypy.json
 
 # OSX files
 .DS_Store
+
+# Yarn cache
+.yarn/

@@ -67,6 +67,12 @@ RUN echo "\n${CYAN}INSTALL PYTHON${CLEAR}"; \
         python3.10-dev \
         python3.10-venv \
         python3.10-distutils \
+        python3.9-dev \
+        python3.9-venv \
+        python3.9-distutils \
+        python3.8-dev \
+        python3.8-venv \
+        python3.8-distutils \
     && rm -rf /var/lib/apt/lists/*
 
 # install pip
@@ -113,7 +119,7 @@ RUN echo "\n${CYAN}SETUP ZSH${CLEAR}"; \
 
 USER ubuntu
 ENV PATH="/home/ubuntu/.local/bin:$PATH"
-# COPY ./config/henanigans.zsh-theme .oh-my-zsh/custom/themes/henanigans.zsh-theme
+COPY ./config/henanigans.zsh-theme .oh-my-zsh/custom/themes/henanigans.zsh-theme
 
 ENV LANG "C.UTF-8"
 ENV LANGUAGE "C.UTF-8"
@@ -125,25 +131,63 @@ FROM base AS dev
 USER ubuntu
 WORKDIR /home/ubuntu
 
-# install python dependencies
-COPY ./dev_requirements.txt dev_requirements.txt
-COPY ./prod_requirements.txt prod_requirements.txt
-# RUN echo "\n${CYAN}INSTALL PYTHON DEPENDECIES${CLEAR}"; \
-#     pip3.10 install -r dev_requirements.txt && \
-#     pip3.10 install -r prod_requirements.txt && \
-#     sudo /home/ubuntu/.local/bin/jupyter server extension enable --py jupyterlab_git
+# install dev dependencies
+RUN echo "\n${CYAN}INSTALL DEV DEPENDENCIES${CLEAR}"; \
+    curl -sSL \
+        https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py \
+        | python3.10 - && \
+    pip3.10 install --upgrade --user \
+        pdm \
+        'pdm-bump<0.7.0' \
+        'rolling-pin>=0.9.2' && \
+    mkdir -p /home/ubuntu/.oh-my-zsh/custom/completions && \
+    pdm self update --pip-args='--user' && \
+    pdm completion zsh > /home/ubuntu/.oh-my-zsh/custom/completions/_pdm
 
-# # build jupyter lab
-# RUN echo "\n${CYAN}BUILD JUPYTER LAB${CLEAR}"; \
-#     . /home/ubuntu/scripts/x_tools.sh && \
-#     export CONFIG_DIR=/home/ubuntu/config && \
-#     export SCRIPT_DIR=/home/ubuntu/scripts && \
-#     x_env_activate_dev && \
-#     jupyter lab build
+# setup pdm
+COPY --chown=ubuntu:ubuntu config/build.yaml /home/ubuntu/config/
+COPY --chown=ubuntu:ubuntu config/dev.lock /home/ubuntu/config/
+COPY --chown=ubuntu:ubuntu config/pdm.toml /home/ubuntu/config/
+COPY --chown=ubuntu:ubuntu config/prod.lock /home/ubuntu/config/
+COPY --chown=ubuntu:ubuntu config/pyproject.toml /home/ubuntu/config/
+COPY --chown=ubuntu:ubuntu scripts/x_tools.sh /home/ubuntu/scripts/
+RUN echo "\n${CYAN}SETUP DIRECTORIES${CLEAR}"; \
+    mkdir pdm
 
-# # cleanup dirs
-# RUN echo "\n${CYAN}REMOVE DIRECTORIES${CLEAR}"; \
-#     rm -rf /home/ubuntu/config /home/ubuntu/scripts
+# create dev env
+WORKDIR /home/ubuntu/pdm
+RUN echo "\n${CYAN}INSTALL DEV ENVIRONMENT${CLEAR}"; \
+    . /home/ubuntu/scripts/x_tools.sh && \
+    export CONFIG_DIR=/home/ubuntu/config && \
+    export SCRIPT_DIR=/home/ubuntu/scripts && \
+    x_env_init dev 3.10 && \
+    cd /home/ubuntu && \
+    ln -s `_x_env_get_path dev 3.10` .dev-env && \
+    ln -s `_x_env_get_path dev 3.10`/lib/python3.10/site-packages .dev-packages
+
+# create prod envs
+RUN echo "\n${CYAN}INSTALL PROD ENVIRONMENTS${CLEAR}"; \
+    . /home/ubuntu/scripts/x_tools.sh && \
+    export CONFIG_DIR=/home/ubuntu/config && \
+    export SCRIPT_DIR=/home/ubuntu/scripts && \
+    x_env_init prod 3.10 && \
+    x_env_init prod 3.10 && \
+    x_env_init prod 3.9 && \
+    x_env_init prod 3.8
+
+# build jupyter lab
+RUN echo "\n${CYAN}BUILD JUPYTER LAB${CLEAR}"; \
+    . /home/ubuntu/scripts/x_tools.sh && \
+    export CONFIG_DIR=/home/ubuntu/config && \
+    export SCRIPT_DIR=/home/ubuntu/scripts && \
+    x_env_activate_dev && \
+    jupyter lab build
+
+WORKDIR /home/ubuntu
+
+# cleanup dirs
+RUN echo "\n${CYAN}REMOVE DIRECTORIES${CLEAR}"; \
+    rm -rf /home/ubuntu/config /home/ubuntu/scripts
 
 ENV REPO='jupyterlab_henanigans'
 ENV PYTHONPATH ":/home/ubuntu/$REPO/python:/home/ubuntu/.local/lib"

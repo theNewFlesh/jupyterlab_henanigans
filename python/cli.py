@@ -2,7 +2,7 @@
 
 try:
     # python2.7 doesn't have typing module
-    from typing import Any, List, Tuple
+    from typing import Any, List, Tuple  # noqa F401
 except ImportError:
     pass
 
@@ -13,7 +13,8 @@ import re
 # python2.7 doesn't have pathlib module
 REPO_PATH = os.path.join(os.sep, *os.path.realpath(__file__).split(os.sep)[:-2])
 REPO = os.path.split(REPO_PATH)[-1]
-GITHUB_USER = 'theNewFlesh'
+GIT_USER = 'theNewFlesh'
+DOCKER_REGISTRY = 'thenewflesh/' + REPO
 USER = 'ubuntu:ubuntu'
 PORT = 8080
 # ------------------------------------------------------------------------------
@@ -48,28 +49,65 @@ def get_info():
         nargs=1,
         action='store',
         help='''Command to run in {repo} app.
-    build        - Build image of {repo}
-    build-prod   - Build production image of {repo}
-    container    - Display the Docker container id of {repo}
-    destroy      - Shutdown {repo} container and destroy its image
-    destroy-prod - Shutdown {repo} production container and destroy its image
-    image        - Display the Docker image id of {repo}
-    lab          - Start a Jupyter lab server and build labextension
-    package      - Build {repo} pip package
-    prod         - Start {repo} production container
-    publish      - Publish {repo} repository to python package index
-    push         - Push {repo} production image to Dockerhub
-    python       - Run python interpreter session inside {repo} container
-    remove       - Remove {repo} Docker image
-    restart      - Restart {repo} container
-    requirements - Write frozen requirements to disk
-    start        - Start {repo} container
-    state        - State of {repo} container
-    stop         - Stop {repo} container
-    zsh          - Run ZSH session inside {repo} container
-    zsh-complete - Generate oh-my-zsh completions
-    zsh-root     - Run ZSH session as root inside {repo} container
-'''.format(repo=REPO))
+    build-package           - Build production version of repo for publishing
+    build-prod              - Publish pip package of repo to PyPi
+    build-publish           - Run production tests first then publish pip package of repo to PyPi
+    build-test              - Build test version of repo for prod testing
+    docker-build            - Build Docker image
+    docker-build-from-cache - Build Docker image from cached image
+    docker-build-prod       - Build production image
+    docker-container        - Display the Docker container id
+    docker-destroy          - Shutdown container and destroy its image
+    docker-destroy-prod     - Shutdown production container and destroy its image
+    docker-image            - Display the Docker image id
+    docker-prod             - Start production container
+    docker-pull-dev         - Pull development image from Docker registry
+    docker-pull-prod        - Pull production image from Docker registry
+    docker-push-dev         - Push development image to Docker registry
+    docker-push-dev-latest  - Push development image to Docker registry with dev-latest tag
+    docker-push-prod        - Push production image to Docker registry
+    docker-push-prod-latest - Push production image to Docker registry with prod-latest tag
+    docker-remove           - Remove Docker image
+    docker-restart          - Restart container
+    docker-start            - Start container
+    docker-stop             - Stop container
+    docs                    - Generate sphinx documentation
+    docs-architecture       - Generate architecture.svg diagram from all import statements
+    docs-full               - Generate documentation, coverage report, diagram and code
+    docs-metrics            - Generate code metrics report, plots and tables
+    library-add             - Add a given package to a given dependency group
+    library-graph-dev       - Graph dependencies in dev environment
+    library-graph-prod      - Graph dependencies in prod environment
+    library-install-dev     - Install all dependencies into dev environment
+    library-install-prod    - Install all dependencies into prod environment
+    library-list-dev        - List packages in dev environment
+    library-list-prod       - List packages in prod environment
+    library-lock-dev        - Resolve dev.lock file
+    library-lock-prod       - Resolve prod.lock file
+    library-remove          - Remove a given package from a given dependency group
+    library-search          - Search for pip packages
+    library-sync-dev        - Sync dev environment with packages listed in dev.lock
+    library-sync-prod       - Sync prod environment with packages listed in prod.lock
+    library-update          - Update dev dependencies
+    library-update-pdm      - Update PDM
+    quickstart              - Display quickstart guide
+    session-lab             - Run jupyter lab server
+    session-python          - Run python session with dev dependencies
+    state                   - State of repository and Docker container
+    test-coverage           - Generate test coverage report
+    test-dev                - Run all tests
+    test-fast               - Test all code excepts tests marked with SKIP_SLOWS_TESTS decorator
+    test-lint               - Run linting and type checking
+    test-prod               - Run tests across all support python versions
+    version                 - Full resolution of repo: dependencies, linting, tests, docs, etc
+    version-bump-major      - Bump pyproject major version
+    version-bump-minor      - Bump pyproject minor version
+    version-bump-patch      - Bump pyproject patch version
+    version-commit          - Tag with version and commit changes to master
+    zsh                     - Run ZSH session inside Docker container
+    zsh-complete            - Generate oh-my-zsh completions
+    zsh-root                - Run ZSH session as root inside Docker container
+'''.format(repo=REPO))  # noqa: E501
 
     parser.add_argument(
         '-a',
@@ -114,11 +152,13 @@ def resolve(commands):
         red='\033[0;31m',
         white='\033[0;37m',
         yellow='\033[0;33m',
-        github_user=GITHUB_USER,
+        git_user=GIT_USER,
+        registry=DOCKER_REGISTRY,
         port=str(PORT),
         pythonpath='{PYTHONPATH}',
         repo_path=REPO_PATH,
         repo=REPO,
+        repo_=re.sub('-', '_', REPO),
         user=USER,
     )
     args = {}
@@ -197,15 +237,6 @@ def start():
     return resolve(cmds)
 
 
-def version_variable():
-    # type: () -> str
-    '''
-    Returns:
-        str: Command to set version variable from version.txt.
-    '''
-    return 'export VERSION=`cat version.txt`'
-
-
 def stop():
     # type: () -> str
     '''
@@ -232,70 +263,94 @@ def remove_container():
     return 'docker container rm --force {repo}'
 
 
-def docker_exec():
-    # type: () -> str
+def docker_exec(tty=False):
+    # type: (bool) -> str
     '''
+    Args:
+        tty (bool, optional): Include --tty flag. Default: False.
+
     Returns:
         str: Partial command to call 'docker exec'.
     '''
-    cmd = line('''
-        docker exec
-            --interactive
-            --tty
-            --user {user}
-            -e PYTHONPATH="${pythonpath}:/home/ubuntu/{repo}/python"
-    ''')
+    if tty:
+        cmd = line('''
+            docker exec
+                --interactive
+                --tty
+                --user {user}
+        ''')
+    else:
+        cmd = line('''
+            docker exec
+                --interactive
+                --user {user}
+        ''')
     return cmd
 
 
-def package_repo():
+def version_variable():
     # type: () -> str
     '''
     Returns:
-        str: Command to create a temporary repo in /tmp.
+        str: Command to set version variable from pyproject.toml.
     '''
-    cmd = docker_exec() + line(''' {repo} zsh -c "
-        cd /home/ubuntu/{repo} &&
-        rm -rf /tmp/{repo} &&
-        mkdir /tmp/{repo} &&
-        cp docker/dev_requirements.txt /tmp/{repo}/ &&
-        cp docker/prod_requirements.txt /tmp/{repo}/ &&
-        cp install.json /tmp/{repo} &&
-        cp LICENSE /tmp/{repo}/LICENSE &&
-        cp MANIFEST.in /tmp/{repo}/MANIFEST.in &&
-        cp package.json /tmp/{repo} &&
-        cp pyproject.toml /tmp/{repo}/pyproject.toml &&
-        cp README.md /tmp/{repo}/README.md &&
-        cp RELEASE.md /tmp/{repo}/RELEASE.md &&
-        cp setup.py /tmp/{repo}/ &&
-        cp ts*.json /tmp/{repo} &&
-        cp version.txt /tmp/{repo}/ &&
-        cp -R src /tmp/{repo} &&
-        cp -R style /tmp/{repo} &&
-        cp -R resources /tmp/{repo}
-        "
+    return line('''
+        export VERSION=`cat docker/config/pyproject.toml
+            | grep -E '^version *='
+            | awk '{{print $3}}'
+            | sed 's/\"//g'`
     ''')
+
+
+def zshrc_tools(command, args=[]):
+    # type: (str, list[str]) -> str
+    '''
+    Creates a tools command string that sources zshrc first.
+
+    Args:
+        command (str): command
+        args (list, optional): List of arguments to be passed to the command.
+            Default: []
+
+    Returns:
+        str: command.
+    '''
+    cmd = 'source /home/ubuntu/.zshrc && {cmd}'.format(cmd=command)
+    if args != []:
+        cmd = cmd + ' ' + ' '.join(args)
+    cmd = '"{cmd}"'.format(cmd=cmd)
     return cmd
 
 
 # COMMANDS----------------------------------------------------------------------
-def build_dev_command():
-    # type: () -> str
+def build_dev_command(use_cache=False):
+    # type: (bool) -> str
     '''
+    Args:
+        use_cache (bool, optional): Whether to use Docker image cache.
+            Default: False.
+
     Returns:
         str: Command to build dev image.
     '''
+    cmd = line('''
+        cd docker;
+        docker build
+            --file dev.dockerfile
+            --build-arg BUILDKIT_INLINE_CACHE=1
+            --label "repository={repo}"
+            --label "docker-registry={registry}"
+            --label "git-user={git_user}"
+            --label "git-branch=$(git branch --show-current)"
+            --label "git-commit=$(git rev-parse HEAD)"
+    ''')
+    if use_cache:
+        cmd += ' --cache-from {registry}:dev-latest'
+    cmd += ' --tag {repo}:dev .; cd ..'
+
     cmds = [
         enter_repo(),
-        line('''
-            cd docker;
-            docker build
-                --force-rm
-                --no-cache
-                --file dev.dockerfile
-                --tag {repo}:latest .;
-            cd ..
-        '''),
+        cmd,
         exit_repo(),
     ]
     return resolve(cmds)
@@ -316,7 +371,12 @@ def build_prod_command():
                 --force-rm
                 --no-cache
                 --file prod.dockerfile
-                --tag {github_user}/{repo}:$VERSION .;
+                --label "repository={repo}"
+                --label "docker-registry={registry}"
+                --label "git-user={git_user}"
+                --label "git-branch=$(git branch --show-current)"
+                --label "git-commit=$(git rev-parse HEAD)"
+                --tag {repo}:prod .;
             cd ..
         '''),
         exit_repo(),
@@ -346,7 +406,7 @@ def destroy_dev_command():
         enter_repo(),
         stop(),
         remove_container(),
-        'docker image rm --force {repo}',
+        'docker image rm --force {repo}:dev',
         exit_repo(),
     ]
     return resolve(cmds)
@@ -359,10 +419,8 @@ def destroy_prod_command():
         str: Command to destroy prod image.
     '''
     cmds = [
-        "export PROD_CID=`docker ps --filter name=^{repo}-prod$ --format '{{{{.ID}}}}'`",
-        "export PROD_IID=`docker images {github_user}/{repo} --format '{{{{.ID}}}}'`",
-        'docker container stop $PROD_CID',
-        'docker image rm --force $PROD_IID',
+        'docker container rm --force {repo}-prod:prod',
+        'docker image rm {repo}:prod',
     ]
     return resolve(cmds)
 
@@ -377,54 +435,6 @@ def image_id_command():
         enter_repo(),
         start(),
         "docker images {repo} --format '{{{{.ID}}}}'",
-        exit_repo(),
-    ]
-    return resolve(cmds)
-
-
-def lab_command():
-    # type: () -> str
-    '''
-    Returns:
-        str: Command to start jupyter lab.
-    '''
-    cmds = [
-        enter_repo(),
-        start(),
-        line(
-            docker_exec() + '''-w /home/ubuntu/{repo} {repo} zsh -c "
-                cp docker/prod_requirements.txt . &&
-                cp docker/dev_requirements.txt . &&
-                sudo /home/ubuntu/.local/bin/jupyter labextension develop --overwrite &&
-                rm prod_requirements.txt &&
-                rm dev_requirements.txt &&
-                jlpm watch &
-                jupyter lab --allow-root --ip=0.0.0.0 --no-browser
-            "
-        '''),
-        exit_repo(),
-    ]
-    return resolve(cmds)
-
-
-def package_command():
-    # type: () -> str
-    '''
-    Returns:
-        str: Command to pip package repo.
-    '''
-    cmds = [
-        enter_repo(),
-        start(),
-        package_repo(),
-        line(
-            docker_exec() + '''{repo} zsh -c "
-                cd /tmp/{repo} &&
-                npm install &&
-                jlpm run build &&
-                python3.7 setup.py sdist
-            "
-        '''),
         exit_repo(),
     ]
     return resolve(cmds)
@@ -453,57 +463,48 @@ def prod_command(args):
             --rm
             --publish {port}:{port}
             --name {repo}-prod
-            {github_user}/{repo}:$VERSION
+            {repo}:prod
         '''),
         exit_repo(),
     ]
     return resolve(cmds)
 
 
-def publish_command():
-    # type: () -> str
+def pull_command(tag='dev-latest'):
+    # type: (str) -> str
     '''
+    Args:
+        tag (str, optional): Tag prefix. Default: 'dev-latest'.
+
     Returns:
-        str: Command to publish repo as pip package.
+        str: Command to pull Docker image from registry.
     '''
     cmds = [
-        enter_repo(),
-        start(),
-        package_repo(),
-        docker_exec() + ' -w /tmp/{repo} {repo} python3.7 setup.py sdist',
-        docker_exec() + ' -w /tmp/{repo} {repo} twine upload dist/*',
-        docker_exec() + ' {repo} rm -rf /tmp/{repo}',
-        exit_repo(),
+        'docker pull {registry}:' + tag,
     ]
     return resolve(cmds)
 
 
-def push_command():
-    # type: () -> str
+def push_command(mode='dev', suffix='$VERSION'):
+    # type: (str, str) -> str
     '''
+    Args:
+        mode (str, optional): Mode. Default: 'dev'.
+        suffix (str, optional): Tag suffix. Default: '$VERSION'.
+
     Returns:
-        str: Command to push prod docker image to dockerhub.
+        str: Command to push Docker image to registry.
     '''
+    tag = mode + '-' + suffix
+    target = ' {registry}:' + tag
     cmds = [
         enter_repo(),
         version_variable(),
         start(),
-        'docker push {github_user}/{repo}:$VERSION',
-        exit_repo(),
-    ]
-    return resolve(cmds)
-
-
-def python_command():
-    # type: () -> str
-    '''
-    Returns:
-        str: Command to start python interpreter.
-    '''
-    cmds = [
-        enter_repo(),
-        start(),
-        docker_exec() + ' -e REPO_ENV=True {repo} python3.7',
+        version_variable(),
+        'docker tag {repo}:' + mode + target,
+        'docker push' + target,
+        'docker rmi' + target,
         exit_repo(),
     ]
     return resolve(cmds)
@@ -538,25 +539,6 @@ def restart_command():
                 -f {repo_path}/docker/docker-compose.yml
                 restart;
             cd ..
-        '''),
-        exit_repo(),
-    ]
-    return resolve(cmds)
-
-
-def requirements_command():
-    # type: () -> str
-    '''
-    Returns:
-        str: Command to regenerate frozen_requirements.txt.
-    '''
-    cmds = [
-        enter_repo(),
-        start(),
-        line(
-            docker_exec() + '''-e REPO_ENV=True {repo} zsh -c "
-                python3.7 -m pip list --format freeze >
-                    /home/ubuntu/{repo}/docker/frozen_requirements.txt"
         '''),
         exit_repo(),
     ]
@@ -639,6 +621,72 @@ def stop_command():
     return resolve(cmds)
 
 
+def x_tools_command(command, args=[], tty=False):
+    # type: (str, list[str], bool) -> str
+    '''
+    Runs a x_tools command.
+
+    Args:
+        command (str): x_tools command
+        args (list, optional): List of arguments to be passed to the command.
+            Default: []
+        tty (bool, optional): Include docker --tty flag. Default: False.
+
+    Returns:
+        str: x_tools command.
+    '''
+    cmds = [
+        enter_repo(),
+        start(),
+        docker_exec(tty=tty) + ' {repo} zsh -c ' + zshrc_tools(command, args),
+        exit_repo(),
+    ]
+    return resolve(cmds)
+
+
+def quickstart_command():
+    # type: () -> str
+    '''
+    Returns a command which prints the quickstart guide.
+
+    Returns:
+        str: quickstart command.
+    '''
+    return line('''
+        cat README.md
+        | grep -A 10000 '# Quickstart'
+        | grep -B 10000 '# Development CLI'
+        | grep -B 10000 -E '^---$'
+        | grep -vE '^---$'
+    ''')
+
+
+def version_commit_command(args=[]):
+    # type: (List[str]) -> str
+    '''
+    Args:
+        args (list[str], optional): List containing a target branch.
+          Default: ['master'].
+
+    Returns:
+        str: Git tag and commit command.
+    '''
+    args = list(filter(lambda x: x != '', args))
+    branch = 'master'
+    if args != []:
+        branch = args[0]
+    cmds = [
+        enter_repo(),
+        version_variable(),
+        'git add --all',
+        'git commit --message $VERSION',
+        'git tag --annotate $VERSION --message "version: $VERSION"',
+        'git push --follow-tags origin HEAD:' + branch + ' --push-option ci.skip',
+        exit_repo(),
+    ]
+    return resolve(cmds)
+
+
 def zsh_command():
     # type: () -> str
     '''
@@ -648,7 +696,7 @@ def zsh_command():
     cmds = [
         enter_repo(),
         start(),
-        docker_exec() + ' -e REPO_ENV=True {repo} zsh',
+        docker_exec(tty=True) + ' {repo} zsh',
         exit_repo(),
     ]
     return resolve(cmds)
@@ -727,24 +775,61 @@ def main():
     '''
     mode, args = get_info()
     lut = {
-        'build': build_dev_command(),
-        'build-prod': build_prod_command(),
-        'container': container_id_command(),
-        'destroy': destroy_dev_command(),
-        'destroy-prod': destroy_prod_command(),
-        'image': image_id_command(),
-        'lab': lab_command(),
-        'package': package_command(),
-        'prod': prod_command(args),
-        'publish': publish_command(),
-        'push': push_command(),
-        'python': python_command(),
-        'remove': remove_command(),
-        'requirements': requirements_command(),
-        'restart': restart_command(),
-        'start': start_command(),
+        'build-package': x_tools_command('x_build_package', args),
+        'build-prod': x_tools_command('x_build_prod', args),
+        'build-publish': x_tools_command('x_build_publish', args),
+        'build-test': x_tools_command('x_build_test', args),
+        'docker-build': build_dev_command(),
+        'docker-build-from-cache': build_dev_command(use_cache=True),
+        'docker-build-prod': build_prod_command(),
+        'docker-container': container_id_command(),
+        'docker-destroy': destroy_dev_command(),
+        'docker-destroy-prod': destroy_prod_command(),
+        'docker-image': image_id_command(),
+        'docker-prod': prod_command(args),
+        'docker-pull-dev': pull_command('dev-latest'),
+        'docker-pull-prod': pull_command('prod-latest'),
+        'docker-push-dev': push_command('dev'),
+        'docker-push-dev-latest': push_command('dev', 'latest'),
+        'docker-push-prod': push_command('prod'),
+        'docker-push-prod-latest': push_command('prod', 'latest'),
+        'docker-remove': remove_command(),
+        'docker-restart': restart_command(),
+        'docker-start': start_command(),
+        'docker-stop': stop_command(),
+        'docs': x_tools_command('x_docs', args),
+        'docs-architecture': x_tools_command('x_docs_architecture', args),
+        'docs-full': x_tools_command('x_docs_full', args),
+        'docs-metrics': x_tools_command('x_docs_metrics', args),
+        'library-add': x_tools_command('x_library_add', args),
+        'library-graph-dev': x_tools_command('x_library_graph_dev', args),
+        'library-graph-prod': x_tools_command('x_library_graph_prod', args),
+        'library-install-dev': x_tools_command('x_library_install_dev', args),
+        'library-install-prod': x_tools_command('x_library_install_prod', args),
+        'library-list-dev': x_tools_command('x_library_list_dev', args),
+        'library-list-prod': x_tools_command('x_library_list_prod', args),
+        'library-lock-dev': x_tools_command('x_library_lock_dev', args),
+        'library-lock-prod': x_tools_command('x_library_lock_prod', args),
+        'library-remove': x_tools_command('x_library_remove', args),
+        'library-search': x_tools_command('x_library_search', args),
+        'library-sync-dev': x_tools_command('x_library_sync_dev', args),
+        'library-sync-prod': x_tools_command('x_library_sync_prod', args),
+        'library-update': x_tools_command('x_library_update', args),
+        'library-update-pdm': x_tools_command('x_library_update_pdm', args),
+        'quickstart': quickstart_command(),
+        'session-lab': x_tools_command('x_session_lab', args, tty=True),
+        'session-python': x_tools_command('x_session_python', args, tty=True),
         'state': state_command(),
-        'stop': stop_command(),
+        'test-coverage': x_tools_command('x_test_coverage', args),
+        'test-dev': x_tools_command('x_test_dev', args),
+        'test-fast': x_tools_command('x_test_fast', args),
+        'test-lint': x_tools_command('x_test_lint', args),
+        'test-prod': x_tools_command('x_test_prod', args),
+        'version': x_tools_command('x_version', args),
+        'version-bump-major': x_tools_command('x_version_bump_major', args),
+        'version-bump-minor': x_tools_command('x_version_bump_minor', args),
+        'version-bump-patch': x_tools_command('x_version_bump_patch', args),
+        'version-commit': version_commit_command(args),
         'zsh': zsh_command(),
         'zsh-complete': zsh_complete_command(),
         'zsh-root': zsh_root_command(),

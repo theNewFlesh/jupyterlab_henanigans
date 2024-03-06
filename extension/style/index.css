@@ -1,0 +1,228 @@
+@import url('./variables.css');
+
+/* MENUBAR------------------------------------------------------------------- */
+#jp-top-panel,
+#jp-menu-panel,
+.lm-MenuBar {
+    background: var(--he-dark1);
+}
+
+/* LEFT-MENU----------------------------------------------------------------- */
+.lm-Menu {
+    border-width: 0px;
+}
+
+.lm-Menu-item[data-type='separator'] > div::after {
+    border-color: var(--he-grey1);
+}
+
+/* BUTTONS------------------------------------------------------------------- */
+.jp-extensionmanager-disclaimer-disable {
+    color: var(--he-light1) !important;
+    background: var(--he-dialog1) !important;
+}
+
+.jp-extensionmanager-disclaimer-disable:hover {
+    color: var(--he-light2) !important;
+    background: var(--he-dialog2) !important;
+}
+
+/* DIALOG-BOX---------------------------------------------------------------- */
+.jp-Dialog-content,
+.jp-Dialog-body {
+    background: var(--he-dialog1) !important;
+    color: var(--he-light1) !important;
+}
+
+.jp-Dialog-header {
+    color: var(--he-light2) !important;
+}
+
+/* DIALOG-BUTTONS------------------------------------------------------------ */
+.jp-mod-styled {
+    font-weight: bold !important;
+}
+
+.jp-Dialog-button {
+    color: var(--he-bg2) !important;
+}
+
+.jp-Dialog-button:focus {
+    outline: 0px !important;
+}
+
+.jp-Dialog-button:hover {
+    color: var(--he-dark1) !important;
+    background: var(--he-dialog2) !important;
+}
+
+.jp-mod-accept {
+    background: var(--he-blue2) !important;
+}
+
+.jp-mod-reject {
+    background: var(--he-light1) !important;
+}
+
+.jp-mod-warn {
+    background: var(--he-red2) !important;
+}
+
+/* MENU-ITEM-SELECTION------------------------------------------------------- */
+.lm-mod-active {
+    color: var(--he-light2) !important;
+    background: var(--he-bg2) !important;
+}
+
+/* ICONS */
+.jp-icon-brand1 {
+    fill: var(--he-blue2) !important;
+}
+
+.jp-icon-selectable-inverse {
+    fill: var(--he-dark2) !important;
+}
+
+.jp-LauncherCard:hover {
+    background: var(--he-dialog1) !important;
+}
+
+/* TOOLBAR-ITEMS------------------------------------------------------------- */
+.jp-Toolbar {
+    border-width: 0px !important;
+}
+
+.jp-ToolbarButtonComponent {
+    background: unset !important;
+}
+
+.jp-RunningSessions-sectionHeader > button:hover,
+.jp-RunningSessions-item:hover,
+.jp-ToolbarButtonComponent:hover,
+.jp-DirListing-item:hover {
+    color: var(--he-light2) !important;
+    background: var(--he-dialog1) !important;
+}
+
+.jp-DirListing-item {
+    color: var(--he-light1) !important;
+}
+
+.jp-mod-selected {
+    color: var(--he-light2) !important;
+    background: var(--he-bg2) !important;
+}
+
+/* SEARCH-DIALOG------------------------------------------------------------- */
+.jp-ModalCommandPalette {
+    background: var(--he-dialog1) !important;
+    padding: 0px !important;
+}
+
+.lm-CommandPalette-content {
+    background: var(--he-dialog1) !important;
+}
+
+.lm-CommandPalette-item:hover,
+.lm-CommandPalette-item.lm-mod-active {
+    color: var(--he-light2) !important;
+    background: var(--he-dialog2) !important;
+}
+
+.lm-CommandPalette-wrapper:after {
+    display: none !important;
+}
+
+.lm-CommandPalette-search {
+    background: var(--he-dialog1) !important;
+}
+
+.lm-CommandPalette-search .lm-CommandPalette-wrapper {
+    background: var(--he-dark2) !important;
+}
+
+.lm-CommandPalette-input {
+    color: var(--he-light2) !important;
+}
+
+/* NOTEBOOK-CANVAS----------------------------------------------------------- */
+.lm-DockPanel {
+    background: var(--he-dark1) !important;
+}
+
+/* GIT-PANEL---------------------------------------------------------------- */
+/* #jp-git-sessions .MuiBadge-root button:hover {
+    background: var(--he-dialog1) !important;
+} */
+
+#jp-git-sessions div button:hover {
+    background: var(--he-dialog1) !important;
+}
+
+#jp-git-sessions > div > div > div:nth-child(1) > div > div:hover,
+#jp-git-sessions > div > div > div:nth-child(1) > div > div div:hover {
+    background: var(--he-dialog1) !important;
+}
+
+#jp-git-sessions > div > form > input:first-child {
+    color: var(--he-light1) !important;
+    background: var(--he-dialog1) !important;
+}
+
+#jp-git-sessions > div > form > input:first-child:hover {
+    color: var(--he-light2) !important;
+    background: var(--he-dialog2) !important;
+}
+
+#jp-git-sessions > div > div > div:nth-child(3) > div > div > input {
+    color: var(--he-dark1) !important;
+    background: var(--he-cyan1) !important;
+}
+
+#jp-git-sessions > div > div > div:nth-child(3) > div > div > input:hover {
+    color: var(--he-dark2) !important;
+    background: var(--he-cyan2) !important;
+}
+
+.MuiListItem-button:hover {
+    color: var(--he-light2) !important;
+    background: var(--he-dialog2) !important;
+}
+
+/* INDICATORS---------------------------------------------------------------- */
+.jp-DirListing-item.jp-mod-running .jp-DirListing-itemIcon:before {
+    color: var(--he-green2) !important;
+}
+
+/* DROPDOWN------------------------------------------------------------------ */
+button.jp-ToolbarButtonComponent .jp-ToolbarButtonComponent-label:hover,
+.jp-Notebook-toolbarCellTypeDropdown > select:hover {
+    color: var(--he-light2) !important;
+    background: var(--he-grey1) !important;
+}
+
+.jp-Completer-item.jp-mod-active {
+    background: var(--he-grey2) !important;
+}
+
+/* PLUGIN-MENU--------------------------------------------------------------- */
+#setting-editor .jp-PluginList ul {
+    background: var(--he-bg1) !important;
+}
+
+#setting-editor .jp-PluginList .jp-mod-selected {
+    color: var(--he-light2) !important;
+    background: var(--he-grey1) !important;
+    border-width: 0px !important;
+}
+
+#setting-editor .jp-PluginList li:hover {
+    color: var(--he-light2) !important;
+    background: var(--he-dialog1) !important;
+}
+
+/* CELL-EDITOR--------------------------------------------------------------- */
+.CodeMirror-gutters,
+.CodeMirror-linenumber.CodeMirror-gutter-elt {
+    background: var(--he-dark2) !important;
+}
