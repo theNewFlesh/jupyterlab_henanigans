@@ -8,11 +8,11 @@ file_extension: ''
 has_binder: false
 has_settings: false
 kind: theme
-labextension_name: henanigans
+labextension_name: jupyterlab_henanigans
 mimetype: ''
 mimetype_name: ''
 project_short_description: A dark JupyterLab theme.
-python_name: henanigans
+python_name: jupyterlab_henanigans
 repository: https://github.com/theNewFlesh/jupyterlab_henanigans
 test: false
 viewer_name: ''

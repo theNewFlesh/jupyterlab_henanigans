@@ -1,7 +1,6 @@
 # VARIABLES---------------------------------------------------------------------
 export HOME="/home/ubuntu"
 export REPO="jupyterlab_henanigans"
-export REPO_SHORT="henanigans"
 export REPO_DIR="$HOME/$REPO"
 export REPO_SNAKE_CASE=`echo $REPO | sed 's/-/_/g'`
 export REPO_SUBPACKAGE="$REPO_DIR/python/$REPO_SNAKE_CASE"
@@ -328,7 +327,7 @@ x_build_test () {
     echo "${CYAN2}BUILDING TEST REPO${CLEAR}\n";
     x_env_activate_dev;
     _x_build test;
-    # remove henanigans packages from pdm env
+    # remove jupyterlab_henanigans packages from pdm env
     x_library_sync_dev;
     jupyter labextension develop --clean --debug --overwrite $BUILD_DIR/$REPO;
     echo "${GREEN2}DONE${CLEAR}\n";
