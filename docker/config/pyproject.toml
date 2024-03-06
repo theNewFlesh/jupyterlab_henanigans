@@ -1,5 +1,5 @@
 [project]
-name = "henanigans"
+name = "jupyterlab_henanigans"
 version = "0.2.3"
 description = "Henanigans theme for Jupyter Lab."
 authors = [
@@ -31,8 +31,8 @@ dependencies = [
 ]
 
 [project.urls]
-repository = "https://github.com/theNewFlesh/henanigans"
-documentation = "https://theNewFlesh.github.io/henanigans"
+repository = "https://github.com/theNewFlesh/jupyterlab_henanigans"
+documentation = "https://theNewFlesh.github.io/jupyterlab_henanigans"
 
 [tool.pytest.ini_options]
 cache_dir = "/home/ubuntu/.pytest_cache"
