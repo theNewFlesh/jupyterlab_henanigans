@@ -315,11 +315,9 @@ x_build_test () {
     echo "${CYAN2}BUILDING TEST REPO${CLEAR}\n";
     x_env_activate_dev;
     _x_build test;
-    cd $BUILD_DIR;
-    cp package.json $REPO_SHORT/;
-    touch $REPO_SHORT/yarn.lock;
-    x_library_sync_dev;
-    jupyter labextension develop --clean --debug --overwrite $BUILD_DIR;
+    local test_repo=$BUILD_DIR/$REPO;
+    cd $test_repo;
+    jupyter labextension develop --clean --debug --overwrite $test_repo;
     echo "${GREEN2}DONE${CLEAR}\n";
 }
 
