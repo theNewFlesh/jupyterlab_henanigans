@@ -6,5 +6,5 @@
 
     // Selected Theme
     // Application-level visual styling theme. Ignored when Adaptive Theme is enabled.
-    "theme": "Henanigans"
+    "theme": "henanigans"
 }
