@@ -291,8 +291,6 @@ _x_build_publish () {
         --username "$1" \
         --password "$2" \
         --comment "$3" \
-        --repository "$4" \
-        --no-very-ssl \
         --verbose;
 }
 

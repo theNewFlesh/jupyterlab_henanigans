@@ -98,9 +98,9 @@
                     "'${input:pypi_comment}'",
                     "'${input:pypi_url}'"
                 ],
-                "dependsOn": [
-                    "[test] prod"
-                ]
+                // "dependsOn": [
+                //     "[test] prod"
+                // ]
             },
             {
                 "label": "[build] test",
@@ -498,7 +498,7 @@
                 "id": "pypi_user",
                 "description": "PyPi username:",
                 "type": "promptString",
-                "default": "the-new-flesh"
+                "default": "__token__"
             },
             {
                 "id": "pypi_password",
