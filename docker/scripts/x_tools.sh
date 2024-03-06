@@ -1,6 +1,7 @@
 # VARIABLES---------------------------------------------------------------------
 export HOME="/home/ubuntu"
 export REPO="jupyterlab_henanigans"
+export REPO_SHORT="henanigans"
 export REPO_DIR="$HOME/$REPO"
 export REPO_SNAKE_CASE=`echo $REPO | sed 's/-/_/g'`
 export REPO_SUBPACKAGE="$REPO_DIR/python/$REPO_SNAKE_CASE"
@@ -315,9 +316,9 @@ x_build_test () {
     x_env_activate_dev;
     _x_build test;
     cd $BUILD_DIR;
-    cp package.json henanigans/;
-    touch henanigans/yarn.lock;
-    # jlpm install;
+    cp package.json $REPO_SHORT/;
+    touch $REPO_SHORT/yarn.lock;
+    x_library_sync_dev;
     jupyter labextension develop --clean --debug --overwrite $BUILD_DIR;
     echo "${GREEN2}DONE${CLEAR}\n";
 }
