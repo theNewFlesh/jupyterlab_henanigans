@@ -14,11 +14,11 @@ const plugin: JupyterFrontEndPlugin<void> = {
   autoStart: true,
   requires: [IThemeManager],
   activate: (app: JupyterFrontEnd, manager: IThemeManager) => {
-    console.log('JupyterLab extension jupyterlab_henanigans is activated!');
+    console.log('Jupyter Lab Henanigans theme is activated!');
     const style = 'jupyterlab_henanigans/index.css';
 
     manager.register({
-      name: 'jupyterlab_henanigans',
+      name: 'Henanigans',
       isLight: true,
       load: () => manager.loadCSS(style),
       unload: () => Promise.resolve(undefined)

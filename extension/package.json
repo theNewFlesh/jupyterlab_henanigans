@@ -1,7 +1,7 @@
 {
     "name": "jupyterlab_henanigans",
-    "version": "0.1.0",
-    "description": "A dark JupyterLab theme.",
+    "version": "0.2.3",
+    "description": "A dark, easy-on-the-eyes theme for JupyterLab.",
     "keywords": [
         "jupyter",
         "jupyterlab",
@@ -11,7 +11,7 @@
     "bugs": {
         "url": "https://github.com/theNewFlesh/jupyterlab_henanigans/issues"
     },
-    "license": "BSD-3-Clause",
+    "license": "MIT",
     "author": {
         "name": "Alex Braun",
         "email": "alexander.g.braun@gmail.com"
@@ -81,8 +81,10 @@
         "typescript": "~5.0.2",
         "yjs": "^13.5.0"
     },
+    "styleModule": "style/index.js",
     "sideEffects": [
-        "style/*.css"
+        "style/*.css",
+        "style/index.js"
     ],
     "publishConfig": {
         "access": "public"
