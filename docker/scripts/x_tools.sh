@@ -265,10 +265,10 @@ x_build_package () {
     # Generate pip package of repo in $HOME/build/repo
     x_env_activate_dev;
     x_build_prod;
-    cd $BUILD_DIR/repo;
+    cd $BUILD_DIR/$REPO;
     echo "${CYAN2}BUILDING PIP PACKAGE${CLEAR}\n";
     pdm build --dest $BUILD_DIR/dist -v;
-    rm -rf $BUILD_DIR/repo/build;
+    rm -rf $BUILD_DIR/$REPO/build;
     _x_build_show_package;
 }
 
