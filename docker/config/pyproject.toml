@@ -1,11 +1,10 @@
 [project]
 name = "jupyterlab_henanigans"
-version = "0.2.3"
+version = "0.3.0"
 description = "Henanigans theme for Jupyter Lab."
 authors = [
-    {name = "Alex Braun", email = "alexander.g.braun@gmail.com"},
+    { name = "Alex Braun", email = "alexander.g.braun@gmail.com" },
 ]
-license = { file = "LICENSE" }
 readme = "README.md"
 keywords = [
     "jupyter",
@@ -27,8 +26,10 @@ classifiers = [
     "Framework :: Jupyter :: JupyterLab :: Extensions :: Prebuilt",
 ]
 requires-python = ">=3.10"
-dependencies = [
-]
+dependencies = []
+
+[project.license]
+file = "LICENSE"
 
 [project.urls]
 repository = "https://github.com/theNewFlesh/jupyterlab_henanigans"
@@ -37,10 +38,7 @@ documentation = "https://theNewFlesh.github.io/jupyterlab_henanigans"
 [tool.pytest.ini_options]
 cache_dir = "/home/ubuntu/.pytest_cache"
 filterwarnings = [
-    # "ignore::UserWarning",
-    # "ignore::DeprecationWarning",
-    # "ignore::PendingDeprecationWarning",
-    "ignore:The --rsyncdir command line argument"
+    "ignore:The --rsyncdir command line argument",
 ]
 markers = [
     "flaky:Flaky test",
@@ -84,38 +82,50 @@ dev = [
 ]
 test = []
 
-[build-system]
-requires = ["hatchling>=1.5.0", "jupyterlab>=4.0.0,<5", "hatch-nodejs-version>=0.3.2"]
-build-backend = "hatchling.build"
-
 [tool.jupyter-packaging.options]
-skip-if-exists = ["henanigans/labextension/static/style.js"]
-ensured-targets = ["henanigans/labextension/static/style.js", "henanigans/labextension/package.json"]
+skip-if-exists = [
+    "henanigans/labextension/static/style.js",
+]
+ensured-targets = [
+    "henanigans/labextension/static/style.js",
+    "henanigans/labextension/package.json",
+]
 
 [tool.jupyter-packaging.builder]
 factory = "jupyter_packaging.npm_builder"
 
 [tool.jupyter-packaging.build-args]
 build_cmd = "build:prod"
-npm = ["jlpm"]
+npm = [
+    "jlpm",
+]
 
 [tool.check-manifest]
 ignore = [
     "henanigans/labextension/**",
     "yarn.lock",
     ".*",
-    "package-lock.json"
+    "package-lock.json",
 ]
 
 [tool.hatch.version]
 source = "nodejs"
 
 [tool.hatch.metadata.hooks.nodejs]
-fields = ["description", "authors", "urls"]
+fields = [
+    "description",
+    "authors",
+    "urls",
+]
 
 [tool.hatch.build.targets.sdist]
-artifacts = ["henanigans/labextension"]
-exclude = [".github", "binder"]
+artifacts = [
+    "henanigans/labextension",
+]
+exclude = [
+    ".github",
+    "binder",
+]
 
 [tool.hatch.build.targets.wheel.shared-data]
 "henanigans/labextension" = "share/jupyter/labextensions/henanigans"
@@ -125,20 +135,28 @@ exclude = [".github", "binder"]
 path = "henanigans/_version.py"
 
 [tool.hatch.build.hooks.jupyter-builder]
-dependencies = ["hatch-jupyter-builder>=0.5"]
+dependencies = [
+    "hatch-jupyter-builder>=0.5",
+]
 build-function = "hatch_jupyter_builder.npm_builder"
 ensured-targets = [
     "henanigans/labextension/package.json",
 ]
-skip-if-exists = ["henanigans/labextension/static/style.js"]
+skip-if-exists = [
+    "henanigans/labextension/static/style.js",
+]
 
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
 build_cmd = "build:prod"
-npm = ["jlpm"]
+npm = [
+    "jlpm",
+]
 
 [tool.hatch.build.hooks.jupyter-builder.editable-build-kwargs]
 build_cmd = "install:extension"
-npm = ["jlpm"]
+npm = [
+    "jlpm",
+]
 source_dir = "src"
 build_dir = "henanigans/labextension"
 
@@ -149,9 +167,21 @@ version_cmd = "hatch version"
 before-build-npm = [
     "python -m pip install 'jupyterlab>=4.0.0,<5'",
     "jlpm",
-    "jlpm build:prod"
+    "jlpm build:prod",
 ]
-before-build-python = ["jlpm clean:all"]
+before-build-python = [
+    "jlpm clean:all",
+]
 
 [tool.check-wheel-contents]
-ignore = ["W002"]
+ignore = [
+    "W002",
+]
+
+[build-system]
+requires = [
+    "hatchling>=1.5.0",
+    "jupyterlab>=4.0.0,<5",
+    "hatch-nodejs-version>=0.3.2",
+]
+build-backend = "hatchling.build"
