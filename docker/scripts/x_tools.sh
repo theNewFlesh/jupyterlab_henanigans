@@ -254,7 +254,7 @@ _x_build_show_package () {
     cd $BUILD_DIR/dist;
     mkdir /tmp/dist;
     local package=`ls | grep tar.gz`;
-    tar xvf $package -C /tmp/dist;
+    tar xvf $package -C /tmp/dist > /dev/null;
     echo "\n${CYAN2}$package${CLEAR}";
     exa --tree --all /tmp/dist;
     rm -rf /tmp/dist;
