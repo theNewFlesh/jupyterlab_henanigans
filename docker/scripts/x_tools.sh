@@ -252,12 +252,27 @@ _x_build_show_dir () {
 _x_build_show_package () {
     # Run tree command on untarred pip package
     cd $BUILD_DIR/dist;
+    rm -rf /tmp/dist;
+    rm -rf /tmp/whl;
+
     mkdir /tmp/dist;
     local package=`ls | grep tar.gz`;
     tar xvf $package -C /tmp/dist > /dev/null;
+
+    mkdir /tmp/whl;
+    local whl=`ls | grep whl`;
+    cp $whl /tmp/whl/whl.zip;
+    cd /tmp/whl;
+    unzip /tmp/whl/whl.zip > /dev/null;
+
     echo "\n${CYAN2}$package${CLEAR}";
     exa --tree --all /tmp/dist;
+
+    echo "\n${CYAN2}WHEEL RECORD${CLEAR}";
+    cat /tmp/whl/*dist-info/RECORD;
+
     rm -rf /tmp/dist;
+    rm -rf /tmp/whl;
     echo;
 }
 
@@ -666,15 +681,26 @@ x_version () {
     x_docs_full;
 }
 
+_x_version_file_update () {
+    # update non-pyproject files with new pyproject version
+    # args: old_version, new_version
+    sed --in-place -E \
+        "s/\"version\": \"$1\"/\"version\": \"$2\"/" \
+        $REPO_DIR/extension/package.json;
+}
+
 _x_version_bump () {
     # Bump repo's version
     # args: type
     x_env_activate_dev;
     local title=`echo $1 | tr '[a-z]' '[A-Z]'`;
     echo "${CYAN2}BUMPING $title VERSION${CLEAR}\n";
+    local old_version=`_x_get_version`;
     cd $PDM_DIR
     pdm bump $1;
     _x_library_pdm_to_repo_dev;
+    local new_version=`_x_get_version`;
+    _x_version_file_update $old_version $new_version;
 }
 
 x_version_bump_major () {

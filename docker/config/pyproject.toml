@@ -1,5 +1,5 @@
 [project]
-name = "jupyterlab_henanigans"
+name = "henanigans"
 version = "0.3.0"
 description = "Henanigans theme for Jupyter Lab."
 authors = [
