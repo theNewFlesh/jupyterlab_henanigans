@@ -315,10 +315,10 @@ x_build_test () {
     x_env_activate_dev;
     _x_build test;
     cd $BUILD_DIR;
+    cp package.json henanigans/;
+    touch henanigans/yarn.lock;
+    # jlpm install;
     jupyter labextension develop --clean --debug --overwrite $BUILD_DIR;
-    local link=`_x_env_get_path dev 3.10`/share/jupyter/labextensions/$REPO;
-    unlink $link;
-    ln -s $BUILD_DIR/$REPO/labextension $link;
     echo "${GREEN2}DONE${CLEAR}\n";
 }
 

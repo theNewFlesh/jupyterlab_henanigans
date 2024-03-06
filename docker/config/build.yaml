@@ -1,6 +1,6 @@
 source_rules:
   - path: /home/ubuntu/jupyterlab_henanigans/extension
-    exclude: "eslint|prettier|yarn|node_modules|copier|pnp|CHANGELOG|package-lock|RELEASE"
+    exclude: "CHANGELOG|copier|eslint|node_modules|package-lock|pnp|prettier|RELEASE|yarn"
   - path: /home/ubuntu/jupyterlab_henanigans
     include: "jupyterlab_henanigans/LICENSE"
   - path: /home/ubuntu/jupyterlab_henanigans/docker/config
