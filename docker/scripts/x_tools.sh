@@ -314,7 +314,7 @@ x_build_test () {
     x_env_activate_dev;
     _x_build test;
     # remove henanigans packages from pdm env
-    # x_library_sync_dev;
+    x_library_sync_dev;
     jupyter labextension develop --clean --debug --overwrite $BUILD_DIR/$REPO;
     echo "${GREEN2}DONE${CLEAR}\n";
 }
