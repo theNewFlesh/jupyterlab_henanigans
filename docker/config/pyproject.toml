@@ -132,9 +132,6 @@ exclude = [
 "jupyterlab_henanigans/labextension" = "share/jupyter/labextensions/jupyterlab_henanigans"
 "install.json" = "share/jupyter/labextensions/jupyterlab_henanigans/install.json"
 
-[tool.hatch.build.hooks.version]
-path = "jupyterlab_henanigans/_version.py"
-
 [tool.hatch.build.hooks.jupyter-builder]
 dependencies = [
     "hatch-jupyter-builder>=0.5",

@@ -686,6 +686,9 @@ _x_version_file_update () {
     sed --in-place -E \
         "s/\"version\": \"$1\"/\"version\": \"$2\"/" \
         $REPO_DIR/extension/package.json;
+    sed --in-place -E \
+        "s/VERSION = \"$1\"/VERSION = \"$2\"/" \
+        $REPO_DIR/extension/$REPO/__init__.py;
 }
 
 _x_version_bump () {

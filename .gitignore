@@ -85,8 +85,6 @@ node_modules/
 .ipynb_checkpoints
 *.tsbuildinfo
 extension/jupyterlab_henanigans/labextension
-# Version file is handled by hatchling
-extension/jupyterlab_henanigans/_version.py
 
 # Created by https://www.gitignore.io/api/python
 # Edit at https://www.gitignore.io/?templates=python
