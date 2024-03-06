@@ -23,6 +23,7 @@ classifiers = [
     "Framework :: Jupyter :: JupyterLab",
     "Framework :: Jupyter :: JupyterLab :: 4",
     "Framework :: Jupyter :: JupyterLab :: Extensions",
+    "Framework :: Jupyter :: JupyterLab :: Extensions :: Themes",
     "Framework :: Jupyter :: JupyterLab :: Extensions :: Prebuilt",
 ]
 requires-python = ">=3.10"
