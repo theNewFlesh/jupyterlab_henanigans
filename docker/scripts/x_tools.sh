@@ -315,6 +315,8 @@ x_build_test () {
     echo "${CYAN2}BUILDING TEST REPO${CLEAR}\n";
     x_env_activate_dev;
     _x_build test;
+    # remove henanigans packages from pdm env
+    # x_library_sync_dev;
     jupyter labextension develop --clean --debug --overwrite $BUILD_DIR/$REPO;
     echo "${GREEN2}DONE${CLEAR}\n";
 }
