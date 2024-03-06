@@ -6,19 +6,19 @@ import {
 import { IThemeManager } from '@jupyterlab/apputils';
 
 /**
- * Initialization data for the @quansight-labs/jupyterlab-theme-winter extension.
+ * Initialization data for the jupyterlab_henanigans extension.
  */
-const extension: JupyterFrontEndPlugin<void> = {
-  id: '@theNewFlesh/jupyterlab_henanigans',
-  requires: [IThemeManager],
+const plugin: JupyterFrontEndPlugin<void> = {
+  id: 'jupyterlab_henanigans:plugin',
+  description: 'A dark JupyterLab theme.',
   autoStart: true,
+  requires: [IThemeManager],
   activate: (app: JupyterFrontEnd, manager: IThemeManager) => {
-    console.log(
-      'JupyterLab extension @theNewFlesh/jupyterlab_henanigans is activated!'
-    );
-    const style = '@theNewFlesh/jupyterlab_henanigans/index.css';
+    console.log('JupyterLab extension jupyterlab_henanigans is activated!');
+    const style = 'jupyterlab_henanigans/index.css';
+
     manager.register({
-      name: 'Henanigans',
+      name: 'jupyterlab_henanigans',
       isLight: true,
       load: () => manager.loadCSS(style),
       unload: () => Promise.resolve(undefined)
@@ -26,4 +26,4 @@ const extension: JupyterFrontEndPlugin<void> = {
   }
 };
 
-export default extension;
+export default plugin;

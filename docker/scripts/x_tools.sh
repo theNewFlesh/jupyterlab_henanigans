@@ -316,9 +316,10 @@ x_build_publish () {
 
 x_build_test () {
     # Build test version of repo for prod testing
-    echo "${CYAN2}BUILDING TEST REPO${CLEAR}\n";
-    _x_build test;
-    _x_build_show_dir;
+    echo "${CYAN2}DEPLOY JUPYTER LAB EXTENSION${CLEAR}\n";
+    x_env_activate_dev;
+    cd $REPO_DIR/extension;
+    jupyter labextension develop --clean --debug --overwrite .;
 }
 
 # DOCS-FUNCTIONS----------------------------------------------------------------

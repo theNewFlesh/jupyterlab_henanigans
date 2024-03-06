@@ -13,7 +13,7 @@ classifiers = [
     "Framework :: Jupyter :: JupyterLab :: 4",
     "Framework :: Jupyter :: JupyterLab :: Extensions",
     "Framework :: Jupyter :: JupyterLab :: Extensions :: Prebuilt",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: BSD License",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
@@ -37,8 +37,8 @@ artifacts = ["jupyterlab_henanigans/labextension"]
 exclude = [".github", "binder"]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"jupyterlab_henanigans/labextension" = "share/jupyter/labextensions/@TheNewFlesh/jupyterlab_henanigans"
-"install.json" = "share/jupyter/labextensions/@TheNewFlesh/jupyterlab_henanigans/install.json"
+"jupyterlab_henanigans/labextension" = "share/jupyter/labextensions/jupyterlab_henanigans"
+"install.json" = "share/jupyter/labextensions/jupyterlab_henanigans/install.json"
 
 [tool.hatch.build.hooks.version]
 path = "jupyterlab_henanigans/_version.py"

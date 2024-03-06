@@ -1,7 +1,7 @@
 # jupyterlab_henanigans
 
 [![Github Actions Status](https://github.com/theNewFlesh/jupyterlab_henanigans/workflows/Build/badge.svg)](https://github.com/theNewFlesh/jupyterlab_henanigans/actions/workflows/build.yml)
-A dark, easy-on-the-eyes theme for JupyterLab.
+A dark JupyterLab theme.
 
 ## Requirements
 
@@ -69,7 +69,7 @@ pip uninstall jupyterlab_henanigans
 
 In development mode, you will also need to remove the symlink created by `jupyter labextension develop`
 command. To find its location, you can run `jupyter labextension list` to figure out where the `labextensions`
-folder is located. Then you can remove the symlink named `@TheNewFlesh/jupyterlab_henanigans` within that folder.
+folder is located. Then you can remove the symlink named `jupyterlab_henanigans` within that folder.
 
 ### Packaging the extension
 
