@@ -1,0 +1,47 @@
+{
+  "template": "https://github.com/theNewFlesh/cookiecutter-datalus",
+  "commit": "2059f685473fc41b6d4b0083184d85cdf646a249",
+  "checkout": null,
+  "skip": [
+    "docs/**/*",
+    "public/**/*",
+    "docker/config/dev.lock",
+    "docker/config/prod.lock",
+    "docker/config/build.yaml"
+  ],
+  "context": {
+    "cookiecutter": {
+      "author": "Alex Braun",
+      "description": "Henanigans theme for Jupyter Lab.",
+      "docker_registry": "dockerhub",
+      "email": "alexander.g.braun@gmail.com",
+      "git_host": "github",
+      "git_organization": "theNewFlesh",
+      "git_user": "theNewFlesh",
+      "include_black": "no",
+      "include_gcc": "no",
+      "include_helm": "no",
+      "include_mkdocs": "no",
+      "include_nvidia": "no",
+      "include_openexr": "no",
+      "include_prod_cli": "no",
+      "include_prod_envs": "yes",
+      "include_rsync": "no",
+      "include_tensorflow": "no",
+      "include_vscode_server": "no",
+      "initial_repo_version": "0.3.1",
+      "keywords": "jupyter, jupyter-lab, theme",
+      "organization_url": "github.com",
+      "port_prefix": "11",
+      "python_max_version": "10",
+      "python_min_version": "8",
+      "repo_type": "library",
+      "repo": "jupyterlab_henanigans",
+      "volume": "",
+      "website": "http://www.alexgbraun.com",
+      "year": "2024",
+      "_template": "https://github.com/theNewFlesh/cookiecutter-datalus"
+    }
+  },
+  "directory": null
+}

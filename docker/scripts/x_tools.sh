@@ -583,14 +583,16 @@ x_test_coverage () {
     mkdir /tmp/coverage;
     cd /tmp/coverage;
     pytest \
-        -c $CONFIG_DIR/pyproject.toml \
+        --config-file $CONFIG_DIR/pyproject.toml \
         --numprocesses $TEST_PROCS \
         --verbosity $TEST_VERBOSITY \
         --cov=$REPO_DIR/python \
         --cov-config=$CONFIG_DIR/pyproject.toml \
         --cov-report=html:$DOCS_DIR/htmlcov \
         $REPO_SUBPACKAGE;
+    exit_code=$?;
     rm -f $DOCS_DIR/htmlcov/.gitignore;
+    return $exit_code;
 }
 
 x_test_dev () {
@@ -599,7 +601,7 @@ x_test_dev () {
     echo "${CYAN2}TESTING DEV${CLEAR}\n";
     cd $REPO_DIR;
     pytest \
-        -c $CONFIG_DIR/pyproject.toml \
+        --config-file $CONFIG_DIR/pyproject.toml \
         --numprocesses $TEST_PROCS \
         --verbosity $TEST_VERBOSITY \
         --durations 20 \
@@ -613,7 +615,7 @@ x_test_fast () {
     cd $REPO_DIR;
     SKIP_SLOW_TESTS=true \
     pytest \
-        -c $CONFIG_DIR/pyproject.toml \
+        --config-file $CONFIG_DIR/pyproject.toml \
         --numprocesses $TEST_PROCS \
         --verbosity $TEST_VERBOSITY \
         $REPO_SUBPACKAGE;
@@ -622,11 +624,18 @@ x_test_fast () {
 x_test_lint () {
     # Run linting and type checking
     x_env_activate_dev;
+    local exit_code=$?;
     cd $REPO_DIR;
+
     echo "${CYAN2}LINTING${CLEAR}\n";
     flake8 python --config $CONFIG_DIR/flake8.ini;
+    exit_code=`_x_resolve_exit_code $exit_code $?`;
+
     echo "${CYAN2}TYPE CHECKING${CLEAR}\n";
     mypy python --config-file $CONFIG_DIR/pyproject.toml;
+    exit_code=`_x_resolve_exit_code $exit_code $?`;
+
+    return $exit_code;
 }
 
 x_test_run () {
