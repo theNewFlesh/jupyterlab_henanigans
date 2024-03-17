@@ -3,11 +3,17 @@
   "commit": "2059f685473fc41b6d4b0083184d85cdf646a249",
   "checkout": null,
   "skip": [
-    "docs/**/*",
-    "public/**/*",
-    "docker/config/dev.lock",
-    "docker/config/prod.lock",
-    "docker/config/build.yaml"
+    "__init__\\.py$",
+    "\\.gitignore$",
+    "\\.gitkeep$",
+    "docker/config/.*\\.lock$",
+    "docker/config/build\\.yaml",
+    "docs/.*",
+    "mkdocs/md/(?!index\\.md|style\\.css)",
+    "public/.*",
+    "python/yoneda/.*(?!command\\.py$)",
+    "resources/.*",
+    "sphinx/.*rst$"
   ],
   "context": {
     "cookiecutter": {
