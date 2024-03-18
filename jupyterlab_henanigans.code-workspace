@@ -514,7 +514,7 @@
                 "id": "pypi_url",
                 "description": "PyPI registry URL:",
                 "type": "promptString",
-                "default": "https://pypi.org"
+                "default": "pypi"
             },
             {
                 "id": "commit_message",
