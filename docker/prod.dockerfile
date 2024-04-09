@@ -41,6 +41,7 @@ RUN echo "\n${CYAN}SETUP PYTHON3.10${CLEAR}"; \
 USER ubuntu
 ENV REPO='jupyterlab_henanigans'
 ENV PYTHONPATH "${PYTHONPATH}:/home/ubuntu/$REPO/python"
+ARG VERSION
 RUN echo "\n${CYAN}INSTALL JUPYTERLAB_HENANIGANS{CLEAR}"; \
     pip3.10 install --user jupyterlab_henanigans==$VERSION
 
