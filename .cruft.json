@@ -11,7 +11,6 @@
     "docs/.*",
     "mkdocs/md/(?!index\\.md|style\\.css)",
     "public/.*",
-    "python/yoneda/.*(?!command\\.py$)",
     "resources/.*",
     "sphinx/.*rst$"
   ],
