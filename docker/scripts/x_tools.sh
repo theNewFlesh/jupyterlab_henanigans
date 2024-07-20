@@ -22,6 +22,7 @@ export JUPYTER_CONFIG_PATH=/home/ubuntu/.jupyter
 export VSCODE_SERVER="$HOME/.vscode-server/bin/*/bin/code-server"
 export PYPI_URL="pypi"
 alias cp=cp  # "cp -i" default alias asks you if you want to clobber files
+alias rolling-pin="/home/ubuntu/.local/bin/rolling-pin"
 
 # COLORS------------------------------------------------------------------------
 export BLUE1='\033[0;34m'
@@ -207,10 +208,13 @@ _x_env_sync () {
     x_env_activate $1 $2 && \
     # run `pdm lock`` if lock file is empty
     if [ `cat pdm.lock | wc -l` = 0 ]; then
-        pdm lock -v
-    fi && \
-    pdm sync --no-self --dev --clean -v && \
+        pdm lock -v;
+        exit_code=`_x_resolve_exit_code $exit_code $?`;
+    fi;
+    pdm sync --no-self --dev --clean -v;
+    exit_code=`_x_resolve_exit_code $exit_code $?`;
     deactivate;
+    return $exit_code;
 }
 
 x_env_activate_dev () {
@@ -228,7 +232,10 @@ x_env_init () {
     # args: mode, python_version
     cd $PDM_DIR;
     _x_env_create $1 $2;
+    exit_code=`_x_resolve_exit_code $exit_code $?`;
     _x_env_sync $1 $2;
+    exit_code=`_x_resolve_exit_code $exit_code $?`;
+    return $exit_code;
 }
 
 # BUILD-FUNCTIONS---------------------------------------------------------------
@@ -296,7 +303,7 @@ x_build_prod () {
 
 _x_build_publish () {
     # Publish pip package of repo to PyPi
-    # args: user, password, comment, url
+    # args: user, token, comment, url
     x_build_package;
     cd $BUILD_DIR;
     echo "${CYAN2}PUBLISHING PIP PACKAGE TO PYPI${CLEAR}\n";
@@ -311,7 +318,7 @@ _x_build_publish () {
 
 x_build_publish () {
     # Run production tests first then publish pip package of repo to PyPi
-    # args: password
+    # args: token
     local version=`_x_get_version`;
     _x_build_publish __token__ $1 $version $PYPI_URL;
 }
