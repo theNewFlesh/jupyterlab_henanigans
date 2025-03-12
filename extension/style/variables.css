@@ -296,6 +296,10 @@
     --jp-accent-color2: var(--he-green1);
     --jp-accent-color3: var(--he-green1);
 
+    /* ICONS */
+    /* --jp-jupyter-icon-color: var(--he-cyan2); */
+    --jp-notebook-icon-color: var(--he-orange2);
+
     /* STATE----------------------------------------------------------------- */
     /* warn, error, success, info */
     --jp-warn-color0: var(--he-orange2);
