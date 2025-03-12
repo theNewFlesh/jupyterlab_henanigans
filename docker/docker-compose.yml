@@ -1,8 +1,8 @@
-version: "3.8"
 services:
   jupyterlab_henanigans:
     container_name: jupyterlab_henanigans
     image: jupyterlab_henanigans:dev
+    platform: linux/amd64
     build:
       context: .
       dockerfile: dev.dockerfile
@@ -19,4 +19,3 @@ services:
       - ./config/jupyter:/home/ubuntu/.jupyter
       - ./config/zshrc:/home/ubuntu/.zshrc
     working_dir: "/home/ubuntu"
-    command: "tail -f /dev/null"

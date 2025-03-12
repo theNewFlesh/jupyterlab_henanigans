@@ -18,7 +18,6 @@
     "cookiecutter": {
       "repo": "jupyterlab_henanigans",
       "repo_type": "library",
-      "include_black": "no",
       "include_gcc": "no",
       "include_helm": "no",
       "include_mkdocs": "no",
@@ -28,7 +27,6 @@
       "include_prod_envs": "yes",
       "include_rsync": "no",
       "include_secret_env": "no",
-      "include_tensorflow": "no",
       "include_vscode_server": "no",
       "port_prefix": "11",
       "git_user": "theNewFlesh",
@@ -43,8 +41,8 @@
       "volume": "",
       "keywords": "jupyter, jupyter-lab, theme",
       "year": "2024",
-      "python_min_version": "8",
-      "python_max_version": "10",
+      "python_min_version": "10",
+      "python_max_version": "13",
       "initial_repo_version": "0.3.1",
       "_template": "https://github.com/theNewFlesh/cookiecutter-datalus"
     }

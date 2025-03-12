@@ -37,6 +37,7 @@ RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${CLEAR}"; \
         bat \
         btop \
         ca-certificates \
+        cargo \
         curl \
         exa \
         git \
@@ -64,22 +65,23 @@ RUN echo "\n${CYAN}INSTALL PYTHON${CLEAR}"; \
     apt update && \
     apt install -y \
         python3-pydot \
+        python3.13-dev \
+        python3.13-venv \
+        python3.12-dev \
+        python3.12-venv \
+        python3.11-dev \
+        python3.11-venv \
         python3.10-dev \
         python3.10-venv \
+        python3.11-distutils \
         python3.10-distutils \
-        python3.9-dev \
-        python3.9-venv \
-        python3.9-distutils \
-        python3.8-dev \
-        python3.8-venv \
-        python3.8-distutils \
     && rm -rf /var/lib/apt/lists/*
 
 # install pip
 RUN echo "\n${CYAN}INSTALL PIP${CLEAR}"; \
     wget https://bootstrap.pypa.io/get-pip.py && \
-    python3.10 get-pip.py && \
-    pip3.10 install --upgrade pip && \
+    python3.13 get-pip.py && \
+    pip3.13 install --upgrade pip && \
     rm -rf get-pip.py
 
 # install nodejs (needed by jupyter lab)
@@ -87,7 +89,7 @@ RUN echo "\n${CYAN}INSTALL NODEJS${CLEAR}"; \
     mkdir -p /etc/apt/keyrings && \
     curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
         | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
-    export NODE_VERSION=18 && \
+    export NODE_VERSION=20 && \
     echo "deb \
         [signed-by=/etc/apt/keyrings/nodesource.gpg] \
         https://deb.nodesource.com/node_$NODE_VERSION.x \
@@ -116,6 +118,25 @@ RUN echo "\n${CYAN}SETUP ZSH${CLEAR}"; \
     rm -rf install-oh-my-zsh.sh && \
     echo 'UTC' > /etc/timezone
 
+# install s6-overlay
+RUN echo "\n${CYAN}INSTALL S6${CLEAR}"; \
+    export S6_ARCH="x86_64" && \
+    export S6_VERSION="v3.1.5.0" && \
+    export S6_URL="https://github.com/just-containers/s6-overlay/releases/download" && \
+    curl -fsSL "${S6_URL}/${S6_VERSION}/s6-overlay-noarch.tar.xz" \
+        -o /tmp/s6-overlay-noarch.tar.xz && \
+    curl -fsSL "${S6_URL}/${S6_VERSION}/s6-overlay-noarch.tar.xz.sha256" \
+        -o /tmp/s6-overlay-noarch.tar.xz.sha256 && \
+    curl -fsSL "${S6_URL}/${S6_VERSION}/s6-overlay-${S6_ARCH}.tar.xz" \
+        -o /tmp/s6-overlay-${S6_ARCH}.tar.xz && \
+    curl -fsSL "${S6_URL}/${S6_VERSION}/s6-overlay-${S6_ARCH}.tar.xz.sha256" \
+        -o /tmp/s6-overlay-${S6_ARCH}.tar.xz.sha256 && \
+    tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz && \
+    tar -C / -Jxpf /tmp/s6-overlay-${S6_ARCH}.tar.xz && \
+    rm /tmp/s6-overlay-noarch.tar.xz \
+       /tmp/s6-overlay-noarch.tar.xz.sha256 \
+       /tmp/s6-overlay-${S6_ARCH}.tar.xz \
+       /tmp/s6-overlay-${S6_ARCH}.tar.xz.sha256
 
 USER ubuntu
 ENV PATH="/home/ubuntu/.local/bin:$PATH"
@@ -127,6 +148,7 @@ ENV LC_ALL "C.UTF-8"
 # ------------------------------------------------------------------------------
 
 FROM base AS dev
+USER root
 
 USER ubuntu
 WORKDIR /home/ubuntu
@@ -135,11 +157,12 @@ WORKDIR /home/ubuntu
 RUN echo "\n${CYAN}INSTALL DEV DEPENDENCIES${CLEAR}"; \
     curl -sSL \
         https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py \
-        | python3.10 - && \
-    pip3.10 install --upgrade --user \
-        pdm \
+        | python3.13 - && \
+    pip3.13 install --upgrade --user \
+        'pdm>=2.19.1' \
         'pdm-bump<0.7.0' \
-        'rolling-pin>=0.10.1' && \
+        'rolling-pin>=0.11.1' \
+        'uv' && \
     mkdir -p /home/ubuntu/.oh-my-zsh/custom/completions && \
     pdm self update --pip-args='--user' && \
     pdm completion zsh > /home/ubuntu/.oh-my-zsh/custom/completions/_pdm
@@ -160,19 +183,20 @@ RUN echo "\n${CYAN}INSTALL DEV ENVIRONMENT${CLEAR}"; \
     . /home/ubuntu/scripts/x_tools.sh && \
     export CONFIG_DIR=/home/ubuntu/config && \
     export SCRIPT_DIR=/home/ubuntu/scripts && \
-    x_env_init dev 3.10 && \
+    x_env_init dev 3.13 && \
     cd /home/ubuntu && \
-    ln -s `_x_env_get_path dev 3.10` .dev-env && \
-    ln -s `_x_env_get_path dev 3.10`/lib/python3.10/site-packages .dev-packages
+    ln -s `_x_env_get_path dev 3.13` .dev-env && \
+    ln -s `_x_env_get_path dev 3.13`/lib/python3.13/site-packages .dev-packages
 
 # create prod envs
 RUN echo "\n${CYAN}INSTALL PROD ENVIRONMENTS${CLEAR}"; \
     . /home/ubuntu/scripts/x_tools.sh && \
     export CONFIG_DIR=/home/ubuntu/config && \
     export SCRIPT_DIR=/home/ubuntu/scripts && \
-    x_env_init prod 3.10 && \
-    x_env_init prod 3.9 && \
-    x_env_init prod 3.8
+    x_env_init prod 3.13 && \
+    x_env_init prod 3.12 && \
+    x_env_init prod 3.11 && \
+    x_env_init prod 3.10
 
 # build jupyter lab
 RUN echo "\n${CYAN}BUILD JUPYTER LAB${CLEAR}"; \
@@ -182,6 +206,15 @@ RUN echo "\n${CYAN}BUILD JUPYTER LAB${CLEAR}"; \
     x_env_activate_dev && \
     jupyter lab build
 
+USER root
+
+# add s6 service and init scripts
+COPY --chown=ubuntu:ubuntu --chmod=755 scripts/s_tools.sh /home/ubuntu/scripts/
+RUN echo "\n${CYAN}SETUP S6 SERVICES${CLEAR}"; \
+    . /home/ubuntu/scripts/s_tools.sh && \
+    s_setup_services
+
+USER ubuntu
 WORKDIR /home/ubuntu
 
 # cleanup dirs
@@ -194,3 +227,5 @@ ENV PYTHONPYCACHEPREFIX "/home/ubuntu/.python_cache"
 ENV HOME /home/ubuntu
 ENV JUPYTER_RUNTIME_DIR /tmp/jupyter_runtime
 
+EXPOSE 8888/tcp
+ENTRYPOINT ["/init"]
