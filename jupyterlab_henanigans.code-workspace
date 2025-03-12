@@ -512,6 +512,24 @@
                     "source $X_TOOLS_PATH &&",
                     "x_vscode_reinstall_extensions"
                 ]
+            },
+            {
+                "label": "[jupyter] build",
+                "detail": "Install npm packages",
+                "icon": {"id": "zap", "color": "terminal.ansiYellow"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_jupyter_build"
+                ]
+            },
+            {
+                "label": "[jupyter] install",
+                "detail": "Build jupter lab",
+                "icon": {"id": "zap", "color": "terminal.ansiYellow"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_jupyter_install"
+                ]
             }
         ],
         "inputs": [
