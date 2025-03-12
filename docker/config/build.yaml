@@ -1,15 +1,13 @@
 source_rules:
   - path: /home/ubuntu/jupyterlab_henanigans/extension
-    exclude: "copier|eslint|node_modules|package-lock|pnp|\\.yarn"
+    exclude: "copier|eslint|node_modules|package-lock|pnp"
   - path: /home/ubuntu/jupyterlab_henanigans
     include: "jupyterlab_henanigans/(LICENSE|\\.gitignore)"
   - path: /home/ubuntu/jupyterlab_henanigans/docker/config
     include: "pyproject"
 rename_rules:
-  - regex: "/home/ubuntu/jupyterlab_henanigans"
-    replace: "/home/ubuntu/build/repo"
-  - regex: "/repo"
-    replace: "/jupyterlab_henanigans"
+  - regex: "/home/ubuntu"
+    replace: "/home/ubuntu/build"
   - regex: "/extension"
     replace: ""
   - regex: "/docker/config"

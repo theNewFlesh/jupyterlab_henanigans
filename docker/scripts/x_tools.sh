@@ -255,11 +255,6 @@ _x_build () {
     rolling-pin conform \
         $CONFIG_DIR/build.yaml \
         --groups base,$1;
-    exit_code=`_x_resolve_exit_code $exit_code $?`;
-    _x_gen_pyproject $1 > $BUILD_DIR/$REPO/pyproject.toml;
-    exit_code=`_x_resolve_exit_code $exit_code $?`;
-    touch $BUILD_DIR/$REPO/$REPO_SNAKE_CASE/py.typed;
-    return $exit_code;
 }
 
 _x_build_show_dir () {
@@ -271,12 +266,27 @@ _x_build_show_dir () {
 _x_build_show_package () {
     # Run tree command on untarred pip package
     cd $BUILD_DIR/dist;
+    rm -rf /tmp/dist;
+    rm -rf /tmp/whl;
+
     mkdir /tmp/dist;
     local package=`ls | grep tar.gz`;
-    tar xvf $package -C /tmp/dist;
+    tar xvf $package -C /tmp/dist > /dev/null;
+
+    mkdir /tmp/whl;
+    local whl=`ls | grep whl`;
+    cp $whl /tmp/whl/whl.zip;
+    cd /tmp/whl;
+    unzip /tmp/whl/whl.zip > /dev/null;
+
     echo "\n${CYAN2}$package${CLEAR}";
     exa --tree --all /tmp/dist;
+
+    echo "\n${CYAN2}WHEEL RECORD${CLEAR}";
+    cat /tmp/whl/*dist-info/RECORD;
+
     rm -rf /tmp/dist;
+    rm -rf /tmp/whl;
     echo;
 }
 
@@ -314,8 +324,8 @@ x_build_prod () {
     # Build production version of repo for publishing
     echo "${CYAN2}BUILDING PROD REPO${CLEAR}\n";
     _x_build prod;
-    _x_gen_pyproject package > $BUILD_DIR/$REPO/pyproject.toml;
-    _x_build_show_dir;
+    # _x_gen_pyproject package > $BUILD_DIR/$REPO/pyproject.toml;
+    # _x_build_show_dir;
 }
 
 _x_build_publish () {
