@@ -3,7 +3,7 @@ name = "jupyterlab_henanigans"
 version = "0.4.1"
 description = "Henanigans theme for Jupyter Lab."
 authors = [
-    { name = "Alex Braun", email = "alexander.g.braun@gmail.com" },
+    {name = "Alex Braun", email = "alexander.g.braun@gmail.com"},
 ]
 readme = "README.md"
 license = "MIT"
@@ -32,7 +32,11 @@ documentation = "https://theNewFlesh.github.io/jupyterlab_henanigans"
 
 [tool.pytest.ini_options]
 cache_dir = "/home/ubuntu/.pytest_cache"
-filterwarnings = []
+filterwarnings = [
+    # "ignore::UserWarning",
+    # "ignore::DeprecationWarning",
+    # "ignore::PendingDeprecationWarning"
+]
 markers = [
     "flaky:Flaky test",
 ]
@@ -58,9 +62,6 @@ warn_no_return = false
 pretty = true
 warn_unused_ignores = true
 
-[tool.pdm]
-distribution = true
-
 [tool.pdm.dev-dependencies]
 lab = []
 dev = [
@@ -84,13 +85,14 @@ dev = [
 ]
 test = []
 
+[tool.pdm]
+distribution = true
+
 [tool.ruff]
 cache-dir = "/home/ubuntu/.cache/ruff"
 line-length = 100
 indent-width = 4
-exclude = [
-    "*_test.py",
-]
+exclude = ["*_test.py"]
 
 [tool.ruff.format]
 quote-style = "preserve"
@@ -98,18 +100,13 @@ indent-style = "space"
 docstring-code-format = true
 skip-magic-trailing-comma = true
 
-[tool.ruff.lint]
-select = [
-    "E",
-    "F",
-]
-ignore = [
-    "E731",
-]
-
 [tool.ruff.lint.flake8-quotes]
 docstring-quotes = "single"
 inline-quotes = "single"
+
+[tool.ruff.lint]
+select = ["E", "F"]
+ignore = ["E731"]
 
 [tool.uv]
 cache-dir = "/home/ubuntu/pdm/cache"
