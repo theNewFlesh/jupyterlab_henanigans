@@ -793,12 +793,14 @@ x_vscode_reinstall_extensions () {
 # JUPYTER-FUNCTIONS-------------------------------------------------------------
 x_jupyter_build () {
     # Build jupter lab
+    x_env_activate_dev;
     cd $EXTENSION_DIR;
     jlpm run build;
 }
 
 x_jupyter_install () {
     # Install npm packages
+    x_env_activate_dev;
     cd $EXTENSION_DIR;
     jlpm install;
 }
