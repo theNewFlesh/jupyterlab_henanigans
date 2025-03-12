@@ -86,6 +86,9 @@ dev = [
 ]
 test = []
 
+# [tool.pdm]
+# distribution = true
+
 [tool.ruff]
 cache-dir = "/home/ubuntu/.cache/ruff"
 line-length = 100
@@ -143,6 +146,7 @@ fields = [
     "description",
     "authors",
     "urls",
+    "keywords",
 ]
 
 [tool.hatch.build.targets.sdist]
@@ -189,7 +193,7 @@ version_cmd = "hatch version"
 
 [tool.jupyter-releaser.hooks]
 before-build-npm = [
-    "python -m pip install 'jupyterlab>=4.0.0,<5'",
+    # "python -m pip install 'jupyterlab>=4.0.0,<5'",
     "jlpm",
     "jlpm build:prod",
 ]

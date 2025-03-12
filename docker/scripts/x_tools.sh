@@ -256,9 +256,9 @@ _x_build () {
         $CONFIG_DIR/build.yaml \
         --groups base,$1;
     exit_code=`_x_resolve_exit_code $exit_code $?`;
-    _x_gen_pyproject $1 > $BUILD_DIR/repo/pyproject.toml;
+    _x_gen_pyproject $1 > $BUILD_DIR/$REPO/pyproject.toml;
     exit_code=`_x_resolve_exit_code $exit_code $?`;
-    touch $BUILD_DIR/repo/$REPO_SNAKE_CASE/py.typed;
+    touch $BUILD_DIR/$REPO/$REPO_SNAKE_CASE/py.typed;
     return $exit_code;
 }
 
@@ -281,13 +281,13 @@ _x_build_show_package () {
 }
 
 x_build_package () {
-    # Generate pip package of repo in $HOME/build/repo
+    # Generate pip package of repo in $HOME/build/$REPO
     x_env_activate_dev;
     x_build_prod;
-    cd $BUILD_DIR/repo;
+    cd $BUILD_DIR/$REPO;
     echo "${CYAN2}BUILDING PIP PACKAGE${CLEAR}\n";
     pdm build --dest $BUILD_DIR/dist -v;
-    rm -rf $BUILD_DIR/repo/build;
+    rm -rf $BUILD_DIR/$REPO/build;
     _x_build_show_package;
 }
 
@@ -314,7 +314,7 @@ x_build_prod () {
     # Build production version of repo for publishing
     echo "${CYAN2}BUILDING PROD REPO${CLEAR}\n";
     _x_build prod;
-    _x_gen_pyproject package > $BUILD_DIR/repo/pyproject.toml;
+    _x_gen_pyproject package > $BUILD_DIR/$REPO/pyproject.toml;
     _x_build_show_dir;
 }
 
@@ -343,8 +343,12 @@ x_build_publish () {
 x_build_test () {
     # Build test version of repo for prod testing
     echo "${CYAN2}BUILDING TEST REPO${CLEAR}\n";
+    x_env_activate_dev;
     _x_build test;
-    _x_build_show_dir;
+    # remove jupyterlab_henanigans packages from pdm env
+    x_library_sync_dev;
+    jupyter labextension develop --clean --debug --overwrite $BUILD_DIR/$REPO;
+    echo "${GREEN2}DONE${CLEAR}\n";
 }
 
 # DOCS-FUNCTIONS----------------------------------------------------------------
@@ -684,7 +688,7 @@ x_test_run () {
     x_env_activate $1 $2;
     local exit_code=$?;
 
-    cd $BUILD_DIR/repo;
+    cd $BUILD_DIR/$REPO;
     echo "${CYAN2}LINTING $1-$2${CLEAR}\n";
     ruff check --config $CONFIG_DIR/pyproject.toml $REPO_SUBPACKAGE;
     exit_code=`_x_resolve_exit_code $exit_code $?`;
