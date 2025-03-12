@@ -92,9 +92,9 @@
     border-width: 0px !important;
 }
 
-.jp-ToolbarButtonComponent {
+/* .jp-ToolbarButtonComponent {
     background: unset !important;
-}
+} */
 
 .jp-RunningSessions-sectionHeader > button:hover,
 .jp-RunningSessions-item:hover,
