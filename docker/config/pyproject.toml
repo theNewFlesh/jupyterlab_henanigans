@@ -1,6 +1,6 @@
 [project]
 name = "jupyterlab_henanigans"
-version = "0.3.1"
+version = "0.4.0"
 description = "Henanigans theme for Jupyter Lab."
 authors = [
     {name = "Alex Braun", email = "alexander.g.braun@gmail.com"},
