@@ -30,7 +30,6 @@ dependencies = []
 repository = "https://github.com/theNewFlesh/jupyterlab_henanigans"
 documentation = "https://theNewFlesh.github.io/jupyterlab_henanigans"
 
-
 [tool.pytest.ini_options]
 cache_dir = "/home/ubuntu/.pytest_cache"
 filterwarnings = [
@@ -156,6 +155,8 @@ artifacts = [
 exclude = [
     ".github",
     "binder",
+    ".yarn",
+    "node_modules",
 ]
 
 [tool.hatch.build.targets.wheel.shared-data]
@@ -193,7 +194,7 @@ version_cmd = "hatch version"
 
 [tool.jupyter-releaser.hooks]
 before-build-npm = [
-    # "python -m pip install 'jupyterlab>=4.0.0,<5'",
+    "python -m pip install 'jupyterlab>=4.0.0,<5'",
     "jlpm",
     "jlpm build:prod",
 ]
