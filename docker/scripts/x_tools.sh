@@ -799,6 +799,13 @@ x_jupyter_build () {
     jlpm run build;
 }
 
+x_jupyter_link () {
+    # Link local extension
+    echo "${CYAN2}JUPYTER LABEXTENSION LINK${CLEAR}\n";
+    x_env_activate_dev;
+    jupyter labextension link $EXTENSION_DIR;
+}
+
 x_jupyter_install () {
     # Install npm packages
     echo "${CYAN2}JLPM INSTALL${CLEAR}\n";
