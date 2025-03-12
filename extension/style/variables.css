@@ -218,7 +218,7 @@
 
     /* Defaults use Material Design specification */
     --jp-content-font-color0: var(--he-light2);
-    --jp-content-font-color1: var(--he-light1);
+    --jp-content-font-color1: var(--he-light2);
     /* this will colour all markdown and output text */
     --jp-content-font-color2: var(--he-light2);
     --jp-content-font-color3: var(--he-light2);

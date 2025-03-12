@@ -226,3 +226,18 @@ button.jp-ToolbarButtonComponent .jp-ToolbarButtonComponent-label:hover,
 .CodeMirror-linenumber.CodeMirror-gutter-elt {
     background: var(--he-dark2) !important;
 }
+
+/* ANSI-COLORS--------------------------------------------------------------- */
+.ansi-green-bg {
+    color: var(--he-dark1) !important;
+    background: var(--he-green1) !important;
+}
+
+.ansi-red-bg {
+    color: var(--he-dark1) !important;
+    background: var(--he-red1) !important;
+}
+
+.ansi-yellow-bg {
+    background: transparent !important;
+}
