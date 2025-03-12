@@ -523,6 +523,15 @@
                 ]
             },
             {
+                "label": "[jupyter] link",
+                "detail": "Link local extension",
+                "icon": {"id": "zap", "color": "terminal.ansiYellow"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_jupyter_link"
+                ]
+            },
+            {
                 "label": "[jupyter] install",
                 "detail": "Build jupter lab",
                 "icon": {"id": "zap", "color": "terminal.ansiYellow"},
