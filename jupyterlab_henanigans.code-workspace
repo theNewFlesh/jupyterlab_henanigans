@@ -121,9 +121,6 @@
                     "'${input:pypi_token}'",
                     "'${input:pypi_comment}'",
                     "'${input:pypi_url}'"
-                ],
-                "dependsOn": [
-                    "[test] prod"
                 ]
             },
             {
