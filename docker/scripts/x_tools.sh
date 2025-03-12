@@ -100,26 +100,12 @@ _x_gen_pyproject () {
         # rolling-pin mangles formatting so use sed
         # add -dev to project.name to avoid circular and ambiguous dependencies
         cat $CONFIG_DIR/pyproject.toml \
-            |  sed -E "s/name.*$REPO.*/name = \"$REPO-dev\"/";
+            | sed -E "s/name.*$REPO.*/name = \"$REPO-dev\"/";
 
-    elif [ "$1" = "test" ]; then
-        rolling-pin toml $CONFIG_DIR/pyproject.toml \
-            --edit "project.requires-python=\">=$MIN_PYTHON_VERSION\"" \
-            --delete "tool.pdm.dev-dependencies.lab" \
-            --delete "tool.pdm.dev-dependencies.dev";
+    else
+        cat $CONFIG_DIR/pyproject.toml \
+            | sed -E "s/requires-python = \">=$MAX_PYTHON_VERSION\"/requires-python = \">=$MIN_PYTHON_VERSION\"/";
 
-    elif [ "$1" = "prod" ]; then
-        rolling-pin toml $CONFIG_DIR/pyproject.toml \
-            --edit "project.requires-python=\">=$MIN_PYTHON_VERSION\"" \
-            --delete "tool.pdm.dev-dependencies.lab" \
-            --delete "tool.pdm.dev-dependencies.dev";
-
-    elif [ "$1" = "package" ]; then
-        rolling-pin toml $CONFIG_DIR/pyproject.toml \
-            --edit "project.requires-python=\">=$MIN_PYTHON_VERSION\"" \
-            --delete "tool.pdm.dev-dependencies" \
-            --delete "tool.mypy" \
-            --delete "tool.pytest";
     fi;
 }
 
@@ -324,7 +310,7 @@ x_build_prod () {
     # Build production version of repo for publishing
     echo "${CYAN2}BUILDING PROD REPO${CLEAR}\n";
     _x_build prod;
-    # _x_gen_pyproject package > $BUILD_DIR/$REPO/pyproject.toml;
+    _x_gen_pyproject package > $BUILD_DIR/$REPO/pyproject.toml;
     # _x_build_show_dir;
 }
 

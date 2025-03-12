@@ -85,8 +85,8 @@ dev = [
 ]
 test = []
 
-# [tool.pdm]
-# distribution = true
+[tool.pdm]
+distribution = true
 
 [tool.ruff]
 cache-dir = "/home/ubuntu/.cache/ruff"
