@@ -238,6 +238,7 @@ button.jp-ToolbarButtonComponent .jp-ToolbarButtonComponent-label:hover,
     background: var(--he-red1) !important;
 }
 
-.ansi-yellow-bg {
+.ansi-yellow-bg,
+.jp-RenderedText pre .ansi-yellow-bg {
     background: transparent !important;
 }
