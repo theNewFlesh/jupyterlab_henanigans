@@ -9,7 +9,6 @@ export REPO_SNAKE_CASE=`echo $REPO | sed 's/-/_/g'`
 export REPO_SUBPACKAGE="$REPO_DIR/python/$REPO_SNAKE_CASE"
 export REPO_COMMAND_FILE="$REPO_SUBPACKAGE/command.py"
 export BUILD_DIR="$HOME/build"
-export EXTENSION_DIR="$REPO_DIR/extension"
 export CONFIG_DIR="$REPO_DIR/docker/config"
 export DOCS_DIR="$REPO_DIR/docs"
 export MIN_PYTHON_VERSION="3.10"
@@ -256,9 +255,9 @@ _x_build () {
         $CONFIG_DIR/build.yaml \
         --groups base,$1;
     exit_code=`_x_resolve_exit_code $exit_code $?`;
-    _x_gen_pyproject $1 > $BUILD_DIR/$REPO/pyproject.toml;
+    _x_gen_pyproject $1 > $BUILD_DIR/repo/pyproject.toml;
     exit_code=`_x_resolve_exit_code $exit_code $?`;
-    touch $BUILD_DIR/$REPO/$REPO_SNAKE_CASE/py.typed;
+    touch $BUILD_DIR/repo/$REPO_SNAKE_CASE/py.typed;
     return $exit_code;
 }
 
@@ -281,13 +280,13 @@ _x_build_show_package () {
 }
 
 x_build_package () {
-    # Generate pip package of repo in $HOME/build/$REPO
+    # Generate pip package of repo in $HOME/build/repo
     x_env_activate_dev;
     x_build_prod;
-    cd $BUILD_DIR/$REPO;
+    cd $BUILD_DIR/repo;
     echo "${CYAN2}BUILDING PIP PACKAGE${CLEAR}\n";
     pdm build --dest $BUILD_DIR/dist -v;
-    rm -rf $BUILD_DIR/$REPO/build;
+    rm -rf $BUILD_DIR/repo/build;
     _x_build_show_package;
 }
 
@@ -314,7 +313,7 @@ x_build_prod () {
     # Build production version of repo for publishing
     echo "${CYAN2}BUILDING PROD REPO${CLEAR}\n";
     _x_build prod;
-    _x_gen_pyproject package > $BUILD_DIR/$REPO/pyproject.toml;
+    _x_gen_pyproject package > $BUILD_DIR/repo/pyproject.toml;
     _x_build_show_dir;
 }
 
@@ -688,7 +687,7 @@ x_test_run () {
     x_env_activate $1 $2;
     local exit_code=$?;
 
-    cd $BUILD_DIR/$REPO;
+    cd $BUILD_DIR/repo;
     echo "${CYAN2}LINTING $1-$2${CLEAR}\n";
     ruff check --config $CONFIG_DIR/pyproject.toml $REPO_SUBPACKAGE;
     exit_code=`_x_resolve_exit_code $exit_code $?`;

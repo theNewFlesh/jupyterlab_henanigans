@@ -8,8 +8,6 @@ source_rules:
 rename_rules:
   - regex: "/home/ubuntu/jupyterlab_henanigans"
     replace: "/home/ubuntu/build/repo"
-  - regex: "/repo"
-    replace: "/jupyterlab_henanigans"
   - regex: "/extension"
     replace: ""
   - regex: "/docker/config"
