@@ -7,6 +7,7 @@ export REPO_SUBPACKAGE="$REPO_DIR/python/$REPO_SNAKE_CASE"
 export REPO_COMMAND_FILE="$REPO_SUBPACKAGE/command.py"
 export PATH=":$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$HOME/.local/lib"
 export BUILD_DIR="$HOME/build"
+export EXTENSION_DIR="$REPO_DIR/extension"
 export PYTHONPATH="$BUILD_DIR:$REPO_DIR/python:$HOME/.local/lib"
 export CONFIG_DIR="$REPO_DIR/docker/config"
 export PDM_DIR="$HOME/pdm"
@@ -559,7 +560,8 @@ x_session_lab () {
     jupyter lab \
         --allow-root \
         --ip=0.0.0.0 \
-        --no-browser;
+        --no-browser \
+        --watch;
 }
 
 x_session_python () {
@@ -748,4 +750,17 @@ x_vscode_reinstall_extensions () {
         | jq '.customizations.vscode.extensions[]' \
         | sed 's/"//g' \
         | parallel "$VSCODE_SERVER --install-extension {}";
+}
+
+# JUPYTER-FUNCTIONS-------------------------------------------------------------
+x_jupyter_install () {
+    # Install npm packages
+    cd $EXTENSION_DIR;
+    jlpm install;
+}
+
+x_jupyter_build () {
+    # Build jupter lab
+    cd $EXTENSION_DIR;
+    jlpm run build;
 }
