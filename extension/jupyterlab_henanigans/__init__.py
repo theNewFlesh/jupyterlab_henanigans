@@ -1,4 +1,4 @@
-__version__ = VERSION = "0.4.1"
+__version__ = VERSION = "0.4.2"
 
 
 def _jupyter_labextension_paths():
