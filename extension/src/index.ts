@@ -19,7 +19,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
 
     manager.register({
       name: 'Henanigans',
-      isLight: true,
+      isLight: false,
       load: () => manager.loadCSS(style),
       unload: () => Promise.resolve(undefined)
     });
