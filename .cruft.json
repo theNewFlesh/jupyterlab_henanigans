@@ -25,7 +25,6 @@
       "include_openexr": "no",
       "include_prod_cli": "no",
       "include_prod_envs": "yes",
-      "include_rsync": "no",
       "include_secret_env": "no",
       "include_vscode_server": "no",
       "port_prefix": "11",
