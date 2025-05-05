@@ -270,5 +270,3 @@ The following is a complete list of all available development commands:
 | -a    | --args    | Additional arguments, this can generally be ignored  |
 | -h    | --help    | Prints command help message to stdout                |
 |       | --dryrun  | Prints command that would otherwise be run to stdout |
-
-
