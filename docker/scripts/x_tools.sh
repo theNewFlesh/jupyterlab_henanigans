@@ -789,13 +789,6 @@ _x_get_version () {
         | sed 's/\"//g';
 }
 
-x_version () {
-    # Full resolution of repo: dependencies, linting, tests, docs, etc
-    x_library_install_dev;
-    x_test_lint;
-    x_docs_full;
-}
-
 _x_version_file_update () {
     # update non-pyproject files with new pyproject version
     # args: old_version, new_version
@@ -805,6 +798,13 @@ _x_version_file_update () {
     sed --in-place -E \
         "s/VERSION = \"$1\"/VERSION = \"$2\"/" \
         $REPO_DIR/extension/$REPO/__init__.py;
+}
+
+x_version () {
+    # Full resolution of repo: dependencies, linting, tests, docs, etc
+    x_library_install_dev;
+    x_test_lint;
+    x_docs_full;
 }
 
 _x_version_bump () {
