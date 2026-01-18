@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/theNewFlesh/cookiecutter-datalus",
-  "commit": "50c00ad5bf94d64ffe7a6e8552eb375a4349cf7b",
+  "commit": "f3de5f8d0fe8dcb0acd12e52231afae80a1208d1",
   "checkout": null,
   "skip": [
     "__init__\\.py$",
@@ -31,7 +31,7 @@
       "git_user": "theNewFlesh",
       "git_host": "github",
       "git_organization": "theNewFlesh",
-      "docker_registry": "dockerhub",
+      "docker_registry": "docker.io",
       "organization_url": "github.com",
       "description": "Henanigans theme for Jupyter Lab.",
       "author": "Alex Braun",
@@ -44,7 +44,7 @@
       "python_max_version": "13",
       "initial_repo_version": "0.3.1",
       "_template": "https://github.com/theNewFlesh/cookiecutter-datalus",
-      "_commit": "50c00ad5bf94d64ffe7a6e8552eb375a4349cf7b"
+      "_commit": "f3de5f8d0fe8dcb0acd12e52231afae80a1208d1"
     }
   },
   "directory": null
