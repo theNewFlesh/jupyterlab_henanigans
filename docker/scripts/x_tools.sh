@@ -17,8 +17,10 @@ export MAX_PYTHON_VERSION="3.13"
 export MKDOCS_DIR="$REPO_DIR/mkdocs"
 export PDM_DIR="$HOME/pdm"
 export PYPI_URL="pypi"
+export PYPI_TEST_URL="testpypi"
 export PYTHONPATH="$REPO_DIR/python:$HOME/.local/lib"
 export SCRIPT_DIR="$REPO_DIR/docker/scripts"
+export SPHINX_DIR="$REPO_DIR/sphinx"
 export TEST_MAX_PROCS=16
 export TEST_PROCS="auto"
 export TEST_VERBOSITY=0
@@ -100,12 +102,26 @@ _x_gen_pyproject () {
         # rolling-pin mangles formatting so use sed
         # add -dev to project.name to avoid circular and ambiguous dependencies
         cat $CONFIG_DIR/pyproject.toml \
-            | sed -E "s/name.*$REPO.*/name = \"$REPO-dev\"/";
+            |  sed -E "s/name.*$REPO.*/name = \"$REPO-dev\"/";
 
-    else
-        cat $CONFIG_DIR/pyproject.toml \
-            | sed -E "s/requires-python = \">=$MAX_PYTHON_VERSION\"/requires-python = \">=$MIN_PYTHON_VERSION\"/";
+    elif [ "$1" = "test" ]; then
+        rolling-pin toml $CONFIG_DIR/pyproject.toml \
+            --edit "project.requires-python=\">=$MIN_PYTHON_VERSION\"" \
+            --delete "tool.pdm.dev-dependencies.lab" \
+            --delete "tool.pdm.dev-dependencies.dev";
 
+    elif [ "$1" = "prod" ]; then
+        rolling-pin toml $CONFIG_DIR/pyproject.toml \
+            --edit "project.requires-python=\">=$MIN_PYTHON_VERSION\"" \
+            --delete "tool.pdm.dev-dependencies.lab" \
+            --delete "tool.pdm.dev-dependencies.dev";
+
+    elif [ "$1" = "package" ]; then
+        rolling-pin toml $CONFIG_DIR/pyproject.toml \
+            --edit "project.requires-python=\">=$MIN_PYTHON_VERSION\"" \
+            --delete "tool.pdm.dev-dependencies" \
+            --delete "tool.mypy" \
+            --delete "tool.pytest";
     fi;
 }
 
@@ -241,6 +257,11 @@ _x_build () {
     rolling-pin conform \
         $CONFIG_DIR/build.yaml \
         --groups base,$1;
+    exit_code=`_x_resolve_exit_code $exit_code $?`;
+    _x_gen_pyproject $1 > $BUILD_DIR/repo/pyproject.toml;
+    exit_code=`_x_resolve_exit_code $exit_code $?`;
+    touch $BUILD_DIR/repo/$REPO_SNAKE_CASE/py.typed;
+    return $exit_code;
 }
 
 _x_build_show_dir () {
@@ -252,38 +273,23 @@ _x_build_show_dir () {
 _x_build_show_package () {
     # Run tree command on untarred pip package
     cd $BUILD_DIR/dist;
-    rm -rf /tmp/dist;
-    rm -rf /tmp/whl;
-
     mkdir /tmp/dist;
     local package=`ls | grep tar.gz`;
-    tar xvf $package -C /tmp/dist > /dev/null;
-
-    mkdir /tmp/whl;
-    local whl=`ls | grep whl`;
-    cp $whl /tmp/whl/whl.zip;
-    cd /tmp/whl;
-    unzip /tmp/whl/whl.zip > /dev/null;
-
+    tar xvf $package -C /tmp/dist;
     echo "\n${CYAN2}$package${CLEAR}";
     exa --tree --all /tmp/dist;
-
-    echo "\n${CYAN2}WHEEL RECORD${CLEAR}";
-    cat /tmp/whl/*dist-info/RECORD;
-
     rm -rf /tmp/dist;
-    rm -rf /tmp/whl;
     echo;
 }
 
 x_build_package () {
-    # Generate pip package of repo in $HOME/build/$REPO
+    # Generate pip package of repo in $HOME/build/repo
     x_env_activate_dev;
     x_build_prod;
-    cd $BUILD_DIR/$REPO;
+    cd $BUILD_DIR/repo;
     echo "${CYAN2}BUILDING PIP PACKAGE${CLEAR}\n";
     pdm build --dest $BUILD_DIR/dist -v;
-    rm -rf $BUILD_DIR/$REPO/build;
+    rm -rf $BUILD_DIR/repo/build;
     _x_build_show_package;
 }
 
@@ -302,7 +308,7 @@ x_build_edit_prod_dockerfile () {
         's/ARG VERSION/COPY \--chown=ubuntu:ubuntu dist\/pkg.tar.gz \/home\/ubuntu\/pkg.tar.gz/' \
         $REPO_DIR/docker/prod.dockerfile;
     sed --in-place -E \
-        's/--user.*==\$VERSION/--user \/home\/ubuntu\/pkg.tar.gz/' \
+        's/pdm add -v .*==\$VERSION/pdm add -v \/home\/ubuntu\/pkg.tar.gz/' \
         $REPO_DIR/docker/prod.dockerfile;
 }
 
@@ -336,6 +342,13 @@ x_build_publish () {
     _x_build_publish __token__ $1 $version $PYPI_URL;
 }
 
+x_build_publish_test () {
+    # Run tests and then publish pip package of repo to test PyPi
+    # args: token
+    local version=`_x_get_version`;
+    _x_build_publish __token__ $1 $version $PYPI_TEST_URL;
+}
+
 x_build_test () {
     # Build test version of repo for prod testing
     echo "${CYAN2}BUILDING TEST REPO${CLEAR}\n";
@@ -356,14 +369,17 @@ x_docs () {
     echo "${CYAN2}GENERATING DOCS${CLEAR}\n";
     rm -rf $DOCS_DIR;
     mkdir -p $DOCS_DIR;
-    cp $REPO_DIR/README.md $REPO_DIR/sphinx/readme.md;
+    cp $REPO_DIR/README.md $SPHINX_DIR/readme.md;
+    sed --in-place -E 's/sphinx\/images/_images/g' $SPHINX_DIR/readme.md;
     sphinx-build sphinx $DOCS_DIR;
     exit_code=`_x_resolve_exit_code $exit_code $?`;
-    rm -f $REPO_DIR/sphinx/readme.md;
+    rm -f $SPHINX_DIR/readme.md;
     cp -f sphinx/style.css $DOCS_DIR/_static/style.css;
     touch $DOCS_DIR/.nojekyll;
     # mkdir -p $DOCS_DIR/resources;
     # cp resources/* $DOCS_DIR/resources/;
+    # mkdir -p $DOCS_DIR/_images/;
+    # cp sphinx/images/logo.png $DOCS_DIR/_images/;
     exit_code=`_x_resolve_exit_code $exit_code $?`;
     return $exit_code;
 }
@@ -393,6 +409,56 @@ x_docs_metrics () {
         $REPO_DIR/python $DOCS_DIR/plots.html;
     rolling-pin table \
         $REPO_DIR/python $DOCS_DIR;
+}
+
+_x_docs_sphinx () {
+    # Generate sphinx rst file
+    # args: subpackage name, absolute module paths
+    echo "$1";
+    echo "$1" | sed 's/./=/g';
+
+    local items=`echo "$2" | tr ' ' '\n'`;
+    echo $items | while read -r item; do
+        local module=`echo $item | sed -E 's/.*\.//'`;
+        local sep=`echo $module | sed 's/./-/g'`;
+        echo "
+$module
+$sep
+.. automodule:: $item
+    :members:
+    :private-members:
+    :undoc-members:
+    :show-inheritance:";
+    done;
+}
+
+x_docs_sphinx () {
+    # Generate sphinx rst files for all python modules
+    echo "${CYAN2}GENERATING SPHINX RST FILES${CLEAR}\n";
+
+    # modules.rst
+    local tmp=`find $REPO_SUBPACKAGE -mindepth 1 -maxdepth 1 -type d`;
+    local modules=`echo "$tmp" | sed -E 's/.*\//   /' | sort`;
+    echo ".. toctree::
+   :maxdepth: 4
+
+$modules" > $SPHINX_DIR/modules.rst;
+
+    # all other rst files
+    local dirs=`find $REPO_SUBPACKAGE -mindepth 1 -maxdepth 1 -type d`;
+    echo $dirs | while read -r dir; do
+        local name=`echo $dir | tr ' ' '\n' | head -n 1 | sed -E 's/^.*\///'`;
+        local items=` \
+            find $dir -type f \
+            | grep -vE '(test|test_base|__init__|/command)\.py' \
+            | sed -E 's/.*python\///' \
+            | sed -E 's/\//./g' \
+            | sed -E 's/\.py//' \
+            | sort \
+            | tr '\n' ' '
+        `;
+        _x_docs_sphinx "$name" "$items" > $SPHINX_DIR/$name.rst;
+    done;
 }
 
 # LIBRARY-FUNCTIONS-------------------------------------------------------------
@@ -641,7 +707,7 @@ x_test_dev () {
 }
 
 x_test_fast () {
-    # Test all code excepts tests marked with SKIP_SLOWS_TESTS decorator
+    # Test all code excepts tests marked with SKIP_SLOW_TESTS decorator
     x_env_activate_dev;
     echo "${CYAN2}FAST TESTING DEV${CLEAR}\n";
     cd $REPO_DIR;
@@ -746,8 +812,9 @@ _x_version_bump () {
     # args: type
     x_env_activate_dev;
     local title=`echo $1 | tr '[a-z]' '[A-Z]'`;
-    echo "${CYAN2}BUMPING $title VERSION${CLEAR}\n";
     local old_version=`_x_get_version`;
+
+    echo "${CYAN2}BUMPING $title VERSION${CLEAR}\n";
     cd $PDM_DIR
     pdm bump $1;
     _x_library_pdm_to_repo_dev;
@@ -771,13 +838,25 @@ x_version_bump_patch () {
     _x_version_bump patch;
 }
 
+x_version_bump () {
+    # Bump repo's patch version up to x.x.20, then bump minor version
+    local minor=`python3 -c \
+        "v = '$(_x_get_version)'.split('.')[-1]; print(int(v) >= 20)"
+    `;
+    if [ "$minor" = "True" ]; then
+        x_version_bump_minor;
+    else
+        x_version_bump_patch;
+    fi;
+}
+
 x_version_commit () {
     # Tag with version and commit changes to master with given message
     # args: message
     local version=`_x_get_version`;
-    git commit --message $version;
+    git commit --message "$version <no ci>";
     git tag --annotate $version --message "$1";
-    git push --follow-tags origin HEAD:master --push-option ci.skip;
+    git push --follow-tags origin HEAD:master;
 }
 
 # VSCODE-FUNCTIONS--------------------------------------------------------------
