@@ -2,7 +2,7 @@ services:
   jupyterlab_henanigans:
     container_name: jupyterlab_henanigans
     image: jupyterlab_henanigans:dev
-    platform: linux/amd64
+    platform: linux/arm64
     build:
       context: .
       dockerfile: dev.dockerfile

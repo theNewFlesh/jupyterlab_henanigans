@@ -50,7 +50,8 @@ See [documentation](https://theNewFlesh.github.io/jupyterlab_henanigans/) for de
 4. `cd jupyterlab_henanigans`
 5. `chmod +x bin/jupyterlab_henanigans`
 6. `bin/jupyterlab_henanigans docker-start`
-   - If building on a M1 Mac run `export DOCKER_DEFAULT_PLATFORM=linux/amd64` first.
+   - If building on a silicon Mac change the value of the `PLATFORM` variable in
+     the cli.py module to `linux/arm64`.
 
 The service should take a few minutes to start up.
 
@@ -108,8 +109,8 @@ folder is located. Then you can remove the symlink named `@theNewFlesh/jupyterla
     in your ~/.zshrc file:
     - `alias jupyterlab_henanigans="cd [parent dir]/jupyterlab_henanigans; bin/jupyterlab_henanigans"`
     - Replace `[parent dir]` with the parent directory of this repository
-3. Consider adding the following line to your ~/.zshrc if you are using a M1 Mac:
-    - `export DOCKER_DEFAULT_PLATFORM=linux/amd64`
+3. Consider adding the following line to your ~/.zshrc if you are using a silicon Mac:
+    - `export DOCKER_DEFAULT_PLATFORM=linux/arm64`
 4. Running the `zsh-complete` command will enable tab completions of the cli
    commands, in the next shell session.
 
